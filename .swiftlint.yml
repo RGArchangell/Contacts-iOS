@@ -1,0 +1,60 @@
+disabled_rules: # rule identifiers to exclude from running
+  - trailing_whitespace
+  - todo
+
+opt_in_rules:
+  - force_unwrapping
+  - private_action
+  - private_outlet
+  - array_init
+  - closure_body_length
+  - contains_over_first_not_nil
+  - empty_count
+  - empty_string
+  - explicit_init
+  - fallthrough
+  - first_where
+  - implicitly_unwrapped_optional
+  - operator_usage_whitespace
+  - sorted_first_last
+  - switch_case_on_newline
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - unused_import
+  - unused_private_declaration
+  - vertical_parameter_alignment_on_call
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Pods
+  - GeneratedCode
+  - Resources/R.generated.swift
+  - RenInsAutoTests/Resources/Sourcery/GeneratedMock/AutoMockable.generated.swift
+empty_count: warning
+
+function_parameter_count:
+  warning: 10
+  error: 10
+
+variable_name:  
+  excluded:
+    - to
+    - row
+    - key
+    - id
+    - url
+    - uri
+    - db
+    - bar
+    - red
+    - lhs
+    - rhs
+    - tag
+    - rs
+    - URI
+    - URL
+    - me
+    - up
+type_name: 
+  excluded:
+    - T
+
+line_length: 130
