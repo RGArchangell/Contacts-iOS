@@ -10,23 +10,24 @@ import Foundation
 import Realm
 import RealmSwift
 
+protocol ContactsTableViewModelDelegate: class {
+    func didRequestContactInfo(_ contact: Contact)
+}
+
 class ContactsTableViewModel {
     
-    private let dataProvider: DataProvider
     private let realm = try? Realm()
     private let realmManager: RealmManager
     private var contactList: [Contact]
     
-    var firstNames: [String]
-    var lastNames: [String]
+    weak var delegate: ContactsTableViewModelDelegate?
+    var names: [Name]
     
     init() {
-        self.dataProvider = DataProvider()
         self.realmManager = RealmManager()
         
         self.contactList = []
-        self.firstNames = []
-        self.lastNames = []
+        self.names = []
         
         loadContacts()
     }
@@ -34,6 +35,7 @@ class ContactsTableViewModel {
     func loadContacts() {
         contactList = []
         var contacts = [Contact]()
+        
         if let objects = realmManager.getObjects(type: Contact.self) {
             for element in objects {
                 if let contact = element as? Contact {
@@ -46,19 +48,38 @@ class ContactsTableViewModel {
     }
     
     func loadNames(completion: @escaping () -> Void) {
-        firstNames = []
-        lastNames = []
+        names = []
         
         for contact in contactList {
-            self.firstNames.append(contact.firstName)
-            self.lastNames.append(contact.lastName)
+            let id = contact.id
+            let firstName = contact.firstName
+            let lastName = contact.lastName
+            
+            self.names.append(Name(id: id, firstName, lastName))
         }
         
         completion()
     }
     
     func getNewId() -> Int {
-        return self.firstNames.count + 1
+         return realmManager.incrementID()
+    }
+    
+    func requestContactInfo(contactID: Int?) {
+        guard let id = contactID else { return }
+        
+        for contact in contactList where contact.id == id {
+            delegate?.didRequestContactInfo(contact)
+        }
+    }
+    
+    func deleteContactFromDatabase(contactID: Int?) {
+        guard let id = contactID else { return }
+        
+        for contact in contactList where contact.id == id {
+            realmManager.deleteObject(objs: contact)
+        }
+        loadContacts()
     }
     
 }

@@ -10,9 +10,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ContactInfoViewController" customModule="Contacts_iOS" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="EditingContactViewController" customModule="Contacts_iOS" customModuleProvider="target">
             <connections>
-                <outlet property="contactView" destination="K3N-Xb-er2" id="ELX-f5-Pjs"/>
+                <outlet property="newContactView" destination="iBW-cY-DZd" id="pQ1-9V-OK1"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,20 +21,20 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K3N-Xb-er2" customClass="ContactView" customModule="Contacts_iOS" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iBW-cY-DZd" customClass="NewContactView" customModule="Contacts_iOS" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="K3N-Xb-er2" secondAttribute="bottom" id="D3w-gy-GuR"/>
-                <constraint firstItem="K3N-Xb-er2" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="TWe-lB-69a"/>
-                <constraint firstItem="K3N-Xb-er2" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="Vjf-28-Jp2"/>
-                <constraint firstItem="K3N-Xb-er2" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="aLi-vl-2hP"/>
+                <constraint firstAttribute="bottom" secondItem="iBW-cY-DZd" secondAttribute="bottom" priority="500" id="8QL-P8-AYs"/>
+                <constraint firstItem="iBW-cY-DZd" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="ZGU-cs-bVT"/>
+                <constraint firstItem="iBW-cY-DZd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="fe3-xx-iXy"/>
+                <constraint firstItem="iBW-cY-DZd" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="jtp-Qb-QmS"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <point key="canvasLocation" x="-49.275362318840585" y="97.767857142857139"/>
+            <point key="canvasLocation" x="137.68115942028987" y="128.57142857142856"/>
         </view>
     </objects>
 </document>

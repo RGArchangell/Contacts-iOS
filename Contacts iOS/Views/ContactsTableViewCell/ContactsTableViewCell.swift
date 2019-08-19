@@ -17,7 +17,6 @@ class ContactsTableViewCell: UITableViewCell {
     func loadNames(firstName: String, lastName: String) {
         self.firstName.text = firstName
         self.lastName.text = lastName
-        print("cell created and updated")
     }
     
     override func awakeFromNib() {

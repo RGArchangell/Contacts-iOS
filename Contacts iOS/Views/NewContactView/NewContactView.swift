@@ -19,6 +19,10 @@ private let ringtones = ["Default",
 
 protocol NewContactViewDelegate: class {
     func didRequestImagePicker(_ requestedView: UIView)
+    func imageHasUpdated()
+    func createIsAvaliable()
+    func createIsNotAvaliable()
+    func deleteRequested()
 }
 
 class NewContactView: UIView {
@@ -30,6 +34,9 @@ class NewContactView: UIView {
     @IBOutlet private weak var phone: UITextField!
     @IBOutlet private weak var ringtone: UIButton!
     @IBOutlet private weak var note: UITextField!
+    @IBOutlet private weak var deleteField: UIStackView! {
+        didSet { deleteField.isHidden = true }
+    }
     
     private var toolBar = UIToolbar()
     private var picker = UIPickerView()
@@ -56,23 +63,63 @@ class NewContactView: UIView {
         addInputAccessoryForTextFields(textFields: [phone], nextTextField: note, dismissable: false, previousNextable: true)
     }
     
+    private func checkMainFields() -> Bool {
+        if !firstName.text.isEmptyOrNil, !lastName.text.isEmptyOrNil, !phone.text.isEmptyOrNil {
+            return true
+        }
+        
+        return false
+    }
+    
+    func checkAvaliability() {
+        if checkMainFields() {
+            delegate?.createIsAvaliable()
+        } else {
+            delegate?.createIsNotAvaliable()
+        }
+    }
+    
     func getInfoFromFields() -> [String: Any] {
+        
         let data = ["firstName": firstName.text ?? "",
                     "lastName": lastName.text ?? "",
                     "phone": phone.text ?? "",
                     "ringtone": ringtone.titleLabel?.text ?? "",
                     "notes": note.text ?? "",
-                    "avatar": avatar.image(for: .normal) ?? UIImage()] as [String : Any]
+                    "avatar": avatar.image(for: .normal) ?? UIImage()] as [String: Any]
         
         return data
     }
     
+    func loadModel(viewModel: EditingContactViewModel) {
+        firstName.text = viewModel.firstName
+        lastName.text = viewModel.lastName
+        phone.text = viewModel.phone
+        ringtone.setTitle(viewModel.ringtone, for: .normal)
+        note.text = viewModel.notes
+        avatar.setImage(viewModel.avatar?.circleMasked, for: .normal)
+    }
+    
+    func showDeleteField() {
+        deleteField.isHidden = false
+    }
+    
     @IBAction private func changeRingtoneInitiated(_ sender: UIButton) {
+        self.endEditing(true)
         createPicker()
     }
     
     @IBAction private func changeAvatarInitiated(_ sender: UIButton) {
+        self.endEditing(true)
         delegate?.didRequestImagePicker(self)
+    }
+    
+    @IBAction private func fieldsEditingChanged(_ sender: UITextField) {
+        checkAvaliability()
+    }
+    
+    @IBAction private func deleteButtonTapped(_ sender: UIButton) {
+        delegate?.deleteRequested()
     }
     
 }
@@ -80,8 +127,9 @@ class NewContactView: UIView {
 extension NewContactView: RootNavigationControllerDelegate {
     
     func avatarImageHasUpdated(_ newImage: UIImage) {
-        self.avatar.contentMode = .scaleAspectFit
+        self.avatar.contentMode = .scaleToFill
         self.avatar.setImage(newImage, for: .normal)
+        delegate?.imageHasUpdated()
     }
     
 }

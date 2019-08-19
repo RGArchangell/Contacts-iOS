@@ -17,7 +17,8 @@ class ContactsTableView: UIView {
     
     private let cellReuseIdentifier = "ContactCell"
     private var viewModel = ContactsTableViewModel()
-    private var numOfCells: Int = 0
+    private var contactsDictionary = [String: [Name]]()
+    private var contactsSectionTitles = [String]()
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -46,33 +47,94 @@ class ContactsTableView: UIView {
         contactsTable.dataSource = self
     }
     
+    private func updateDataFromModel() {
+        contactsDictionary.removeAll()
+        contactsSectionTitles.removeAll()
+        
+        for name in viewModel.names {
+            let contactKey = String(name.last.prefix(1))
+            
+            if var contactValues = contactsDictionary[contactKey] {
+                contactValues.append(name)
+                contactsDictionary[contactKey] = contactValues
+            } else {
+                contactsDictionary[contactKey] = [name]
+            }
+        }
+        
+        contactsSectionTitles = contactsDictionary.keys.sorted()
+    }
+    
     func setViewModel(viewModel: ContactsTableViewModel) {
         self.viewModel = viewModel
-        self.numOfCells = viewModel.firstNames.count
+        updateDataFromModel()
+    }
+    
+    func viewWillAppear() {
+        contactsDictionary.removeAll()
     }
     
     func reloadTable() {
         contactsTable.reloadData()
-        print("table did reload. num of cells: \(numOfCells)")
+        print("table did reload. num of cells: \(viewModel.names.count)")
     }
     
 }
 
 extension ContactsTableView: UITableViewDataSource, UITableViewDelegate {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return contactsSectionTitles.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.numOfCells
+        let contactKey = contactsSectionTitles[section]
+        
+        guard let contactValues = contactsDictionary[contactKey] else { return 0 }
+        return contactValues.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let contactCell: ContactsTableViewCell = self.contactsTable.dequeueReusableCell(
-            withIdentifier: cellReuseIdentifier) as! ContactsTableViewCell
+        guard let contactCell: ContactsTableViewCell = self.contactsTable.dequeueReusableCell(
+            withIdentifier: cellReuseIdentifier) as? ContactsTableViewCell else { return UITableViewCell() }
         
-        let firstName = viewModel.firstNames[indexPath.row]
-        let lastName = viewModel.lastNames[indexPath.row]
+        let contactKey = contactsSectionTitles[indexPath.section]
+        guard let contactValues = contactsDictionary[contactKey] else { return UITableViewCell() }
+        
+        let firstName = contactValues[indexPath.row].first
+        let lastName = contactValues[indexPath.row].last
+        
         contactCell.loadNames(firstName: firstName, lastName: lastName)
         return contactCell
     }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return contactsSectionTitles[section]
+    }
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return contactsSectionTitles
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let contactInfo = contactsDictionary[contactsSectionTitles[indexPath.section]]
+        let contactID = contactInfo?[indexPath.row].id
+        viewModel.requestContactInfo(contactID: contactID)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        
+        let contactInfo = contactsDictionary[contactsSectionTitles[indexPath.section]]
+        let contactID = contactInfo?[indexPath.row].id
+        viewModel.deleteContactFromDatabase(contactID: contactID)
+        
+        self.updateDataFromModel()
+    }
+    
+}
+
+extension ContactsTableView: UISearchControllerDelegate {
     
 }
 

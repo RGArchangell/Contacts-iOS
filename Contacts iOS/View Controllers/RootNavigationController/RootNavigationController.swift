@@ -19,7 +19,9 @@ class RootNavigationController: UINavigationController {
 
 extension RootNavigationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        print("image picked")
         
         guard let pickedImage = info[.originalImage] as? UIImage else {
             dismiss(animated: true, completion: nil)

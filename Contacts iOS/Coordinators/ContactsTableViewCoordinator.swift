@@ -12,7 +12,6 @@ import UIKit
 class ContactsTableViewCoordinator: Coordinator {
     
     private let rootViewController: RootNavigationController
-    lazy var dataProvider = DataProvider()
     lazy var contactsTableViewController = ContactsTableViewController(viewModel: contactsTableViewModel)
     lazy var contactsTableViewModel = ContactsTableViewModel()
     
@@ -21,6 +20,7 @@ class ContactsTableViewCoordinator: Coordinator {
     }
     
     override func start() {
+        contactsTableViewModel.delegate = self
         contactsTableViewController.delegate = self
         
         rootViewController.setViewControllers([contactsTableViewController], animated: false)
@@ -29,6 +29,7 @@ class ContactsTableViewCoordinator: Coordinator {
     private func setNavigationBarPreferences() {
         rootViewController.navigationBar.topItem?.title = "Contacts"
         rootViewController.navigationBar.prefersLargeTitles = true
+        rootViewController.navigationItem.largeTitleDisplayMode = .never
         rootViewController.view.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         rootViewController.navigationBar.shadowImage = UIImage()
         rootViewController.navigationBar.isTranslucent = false
@@ -47,7 +48,19 @@ class ContactsTableViewCoordinator: Coordinator {
     
     @objc private func goToAddScreen() {
         let id = contactsTableViewModel.getNewId()
-        let contactInfoViewCoordinator = ContactInfoViewCoordinator(rootViewController: rootViewController, id: id)
+        let newContactViewCoordinator = EditingContactViewCoordinator(rootViewController: rootViewController,
+                                                                      id: id,
+                                                                      type: .new)
+        newContactViewCoordinator.delegate = self
+        
+        addChildCoordinator(newContactViewCoordinator)
+        newContactViewCoordinator.start()
+    }
+    
+    private func goToContactScreen(contact: Contact) {
+        let contactInfoViewCoordinator = ContactInfoViewCoordinator(rootViewController: rootViewController,
+                                                                    contact.id)
+        
         contactInfoViewCoordinator.delegate = self
         
         addChildCoordinator(contactInfoViewCoordinator)
@@ -64,7 +77,15 @@ extension ContactsTableViewCoordinator: ContactsTableViewControllerDelegate {
     
 }
 
-extension ContactsTableViewCoordinator: ContactInfoViewCoordinatorDelegate {
+extension ContactsTableViewCoordinator: ContactsTableViewModelDelegate {
+    
+    func didRequestContactInfo(_ contact: Contact) {
+        goToContactScreen(contact: contact)
+    }
+    
+}
+
+extension ContactsTableViewCoordinator: EditingContactViewCoordinatorDelegate, ContactInfoViewCoordinatorDelegate {
     
     func сoordinatorDidFinish(_ сoordinator: Coordinator) {
         removeChildCoordinator(сoordinator)

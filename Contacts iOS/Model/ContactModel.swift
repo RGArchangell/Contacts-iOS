@@ -18,7 +18,7 @@ class Contact: Object {
     @objc private(set) dynamic var phone = ""
     @objc private(set) dynamic var notes = ""
     @objc private(set) dynamic var ringtone = ""
-    private(set) dynamic var avatar: UIImage?
+    @objc private(set) dynamic var avatar = ""
     
     override static func primaryKey() -> String? {
         return "id"
@@ -30,7 +30,7 @@ class Contact: Object {
                      phone: String,
                      notes: String,
                      ringtone: String,
-                     avatar: UIImage?) {
+                     avatar: String) {
         self.init()
         self.id = id
         self.firstName = firstName

@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+protocol ContactViewDelegate: class {
+    func phoneCallInitiated(_ phone: String)
+}
+
 class ContactView: UIView {
     
     @IBOutlet private var contentView: UIView!
@@ -17,6 +21,8 @@ class ContactView: UIView {
     @IBOutlet private weak var phone: UIButton!
     @IBOutlet private weak var ringtone: UILabel!
     @IBOutlet private weak var note: UILabel!
+    
+    weak var delegate: ContactViewDelegate?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -36,7 +42,16 @@ class ContactView: UIView {
     }
     
     func loadModel(viewModel: ContactInfoViewModel) {
-        
+        name.text = viewModel.name
+        phone.setTitle(viewModel.phone, for: .normal)
+        ringtone.text = viewModel.ringtone
+        note.text = viewModel.notes
+        avatar.image = viewModel.avatar?.circleMasked
+    }
+
+    @IBAction private func phoneButtonTouched(_ sender: UIButton) {
+        guard let phoneNumber = phone.title(for: .normal) else { return }
+        delegate?.phoneCallInitiated(phoneNumber)
     }
     
 }

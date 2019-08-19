@@ -2,57 +2,50 @@
 //  ContactInfoViewModel.swift
 //  Contacts iOS
 //
-//  Created by Archangel on 12/08/2019.
+//  Created by Archangel on 16/08/2019.
 //  Copyright © 2019 Archangel. All rights reserved.
 //
 
 import Foundation
-import Realm
-import RealmSwift
 import UIKit
 
-protocol ContactInfoViewModelDelegate: class {
-    func didRequestImagePicker(_ requestedView: UIView)
-}
-
 class ContactInfoViewModel {
-    private let realm = try? Realm()
-    private let realmManager: RealmManager
-    private var id: Int
     
-    weak var delegate: ContactInfoViewModelDelegate?
+    private var contactID: Int
+    private let realmManager = RealmManager()
     
-    init(id: Int) {
-        self.realmManager = RealmManager()
-        self.id = id
+    private(set) var name: String?
+    private(set) var phone: String?
+    private(set) var notes: String?
+    private(set) var ringtone: String?
+    private(set) var avatar: UIImage?
+    
+    init(contactID: Int) {
+        self.contactID = contactID
+        loadData()
     }
     
-    func saveContactData(contact: [String: Any]) {
-        guard
-            let firstName = contact["firstName"] as? String,
-            let lastName = contact["lastName"] as? String,
-            let phone = contact["phone"] as? String,
-            let ringtone = contact["ringtone"] as? String,
-            let notes = contact["notes"] as? String,
-            let avatar = contact["avatar"] as? UIImage
-        else
-        { return }
+    func loadData() {
+        var loadedContact = Contact()
+        if let objects = realmManager.getObjects(type: Contact.self) {
+            for element in objects {
+                if let contact = element as? Contact, contact.id == contactID {
+                    loadedContact = contact
+                }
+            }
+        }
         
-        print("saving")
+        self.name = loadedContact.firstName + " " + loadedContact.lastName
+        self.phone = loadedContact.phone
+        self.ringtone = loadedContact.ringtone
+        self.notes = loadedContact.notes
         
-        let contact = Contact(id: id,
-                              firstName: firstName,
-                              lastName: lastName,
-                              phone: phone,
-                              notes: notes,
-                              ringtone: ringtone,
-                              avatar: avatar)
-        
-        realmManager.saveObjects(objs: contact)
+        let avatar = getImage(imageName: "\(loadedContact.id)_avatar.jpg")
+        self.avatar = avatar
     }
     
-    func requestImagePicker(_ requestedView: UIView) {
-        delegate?.didRequestImagePicker(requestedView)
+    func requestCall(_ phone: String) {
+        callNumber(phoneNumber: phone)
     }
     
 }

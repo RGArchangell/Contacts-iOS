@@ -14,7 +14,7 @@ protocol ContactsTableViewControllerDelegate: class {
 
 class ContactsTableViewController: UIViewController {
 
-    @IBOutlet weak var contactsTableView: ContactsTableView!
+    @IBOutlet private weak var contactsTableView: ContactsTableView!
     
     weak var delegate: ContactsTableViewControllerDelegate?
     private var viewModel: ContactsTableViewModel
@@ -30,11 +30,12 @@ class ContactsTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         viewModel.loadContacts()
+        contactsTableView.viewWillAppear()
         delegate?.viewWillAppear()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        viewModel.loadNames() {
+        viewModel.loadNames {
             self.contactsTableView.setViewModel(viewModel: self.viewModel)
             self.contactsTableView.reloadTable()
         }

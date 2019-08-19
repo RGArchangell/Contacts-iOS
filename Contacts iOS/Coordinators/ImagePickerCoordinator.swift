@@ -39,6 +39,7 @@ class ImagePickerCoordinator: Coordinator {
         actionSheet.addAction(UIAlertAction(title: "Take Photo",
                                             style: UIAlertAction.Style.default) { (_: UIAlertAction) -> Void in
                                                 imagePicker.sourceType = UIImagePickerController.SourceType.camera
+                                                imagePicker.delegate = self.rootViewController
                                                 self.rootViewController.present(imagePicker, animated: true, completion: nil)
         })
         
@@ -46,6 +47,7 @@ class ImagePickerCoordinator: Coordinator {
                                             style: UIAlertAction.Style.default) { (_: UIAlertAction) -> Void in
                                                 
                                                 imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
+                                                imagePicker.delegate = self.rootViewController
                                                 self.rootViewController.present(imagePicker, animated: true, completion: nil)
         })
         
