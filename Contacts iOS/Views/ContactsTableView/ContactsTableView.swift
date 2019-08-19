@@ -18,7 +18,9 @@ class ContactsTableView: UIView {
     private let cellReuseIdentifier = "ContactCell"
     private var viewModel = ContactsTableViewModel()
     private var contactsDictionary = [String: [Name]]()
+    private var tableContactsDictionary = [String: [Name]]()
     private var contactsSectionTitles = [String]()
+    private var workItemForSearch: DispatchWorkItem?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -38,6 +40,7 @@ class ContactsTableView: UIView {
         
         setSearchBarShadow()
         setTableViewPreferences()
+        setSearchBarPreferences()
     }
     
     private func setTableViewPreferences() {
@@ -45,6 +48,10 @@ class ContactsTableView: UIView {
         contactsTable.register(tableCell, forCellReuseIdentifier: cellReuseIdentifier)
         contactsTable.delegate = self
         contactsTable.dataSource = self
+    }
+    
+    private func setSearchBarPreferences() {
+        contactsSearch.delegate = self
     }
     
     private func updateDataFromModel() {
@@ -62,7 +69,12 @@ class ContactsTableView: UIView {
             }
         }
         
-        contactsSectionTitles = contactsDictionary.keys.sorted()
+        tableContactsDictionary = contactsDictionary
+        updateHeaders()
+    }
+    
+    private func updateHeaders() {
+        contactsSectionTitles = tableContactsDictionary.keys.sorted()
     }
     
     func setViewModel(viewModel: ContactsTableViewModel) {
@@ -71,6 +83,7 @@ class ContactsTableView: UIView {
     }
     
     func viewWillAppear() {
+        tableContactsDictionary.removeAll()
         contactsDictionary.removeAll()
     }
     
@@ -90,7 +103,7 @@ extension ContactsTableView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let contactKey = contactsSectionTitles[section]
         
-        guard let contactValues = contactsDictionary[contactKey] else { return 0 }
+        guard let contactValues = tableContactsDictionary[contactKey] else { return 0 }
         return contactValues.count
     }
     
@@ -99,7 +112,7 @@ extension ContactsTableView: UITableViewDataSource, UITableViewDelegate {
             withIdentifier: cellReuseIdentifier) as? ContactsTableViewCell else { return UITableViewCell() }
         
         let contactKey = contactsSectionTitles[indexPath.section]
-        guard let contactValues = contactsDictionary[contactKey] else { return UITableViewCell() }
+        guard let contactValues = tableContactsDictionary[contactKey] else { return UITableViewCell() }
         
         let firstName = contactValues[indexPath.row].first
         let lastName = contactValues[indexPath.row].last
@@ -117,7 +130,9 @@ extension ContactsTableView: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let contactInfo = contactsDictionary[contactsSectionTitles[indexPath.section]]
+        self.endEditing(true)
+        
+        let contactInfo = tableContactsDictionary[contactsSectionTitles[indexPath.section]]
         let contactID = contactInfo?[indexPath.row].id
         viewModel.requestContactInfo(contactID: contactID)
     }
@@ -126,14 +141,14 @@ extension ContactsTableView: UITableViewDataSource, UITableViewDelegate {
         guard editingStyle == .delete else { return }
         
         let sectionTitle = contactsSectionTitles[indexPath.section]
-        let id = contactsDictionary[sectionTitle]?[indexPath.row].id
+        let id = tableContactsDictionary[sectionTitle]?[indexPath.row].id
         viewModel.deleteContactFromDatabase(contactID: id)
         
-        contactsDictionary[sectionTitle]?.remove(at: indexPath.row)
+        tableContactsDictionary[sectionTitle]?.remove(at: indexPath.row)
         contactsTable.deleteRows(at: [indexPath], with: .automatic)
         
-        if contactsDictionary[sectionTitle]?.isEmpty ?? false {
-            contactsDictionary.removeValue(forKey: sectionTitle)
+        if tableContactsDictionary[sectionTitle]?.isEmpty ?? false {
+            tableContactsDictionary.removeValue(forKey: sectionTitle)
             contactsSectionTitles.remove(at: indexPath.section)
             
             contactsTable.reloadData()
@@ -142,7 +157,68 @@ extension ContactsTableView: UITableViewDataSource, UITableViewDelegate {
     
 }
 
-extension ContactsTableView: UISearchControllerDelegate {
+extension ContactsTableView: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.endEditing(true)
+        contactsSearch.isLoading = true
+        performSearch(searchBar.text) {
+            self.contactsSearch.isLoading = false
+        }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        contactsSearch.isLoading = true
+        self.workItemForSearch?.cancel()
+        
+        guard let text = searchBar.text else { return }
+        
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.performSearch(text) {
+                self?.contactsSearch.isLoading = false
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+        self.workItemForSearch = workItem
+        
+    }
+    
+    private func performSearch(_ text: String?, completion: @escaping () -> Void) {
+        guard !text.isEmptyOrNil else {
+            tableContactsDictionary = contactsDictionary
+            updateHeaders()
+            reloadTable()
+            completion()
+            return
+        }
+        
+        var array = [Name]()
+        for contact in contactsDictionary {
+            for value in contact.value {
+                array.append(value)
+            }
+        }
+        
+        let filtered = array.filter { contact -> Bool in
+            guard let text = text else { return false }
+            let fullName = contact.first + contact.last
+            
+            return fullName.contains(text)
+        }
+        
+        tableContactsDictionary.removeAll()
+        for name in filtered {
+            guard let keyChar = name.last.first else { continue }
+            let key = String(keyChar)
+            tableContactsDictionary.updateValue([name], forKey: key)
+        }
+        
+        updateHeaders()
+        
+        reloadTable()
+        completion()
+    }
     
 }
 

@@ -20,4 +20,10 @@ struct Name {
         self.last = lastName
     }
     
+    init() {
+        self.id = -1
+        self.first = ""
+        self.last = ""
+    }
+    
 }
