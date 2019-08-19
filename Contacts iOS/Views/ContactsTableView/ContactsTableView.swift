@@ -211,7 +211,13 @@ extension ContactsTableView: UISearchBarDelegate {
         for name in filtered {
             guard let keyChar = name.last.first else { continue }
             let key = String(keyChar)
-            tableContactsDictionary.updateValue([name], forKey: key)
+            
+            if var contactValues = tableContactsDictionary[key] {
+                contactValues.append(name)
+                tableContactsDictionary[key] = contactValues
+            } else {
+                tableContactsDictionary[key] = [name]
+            }
         }
         
         updateHeaders()
