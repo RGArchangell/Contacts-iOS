@@ -125,11 +125,19 @@ extension ContactsTableView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         
-        let contactInfo = contactsDictionary[contactsSectionTitles[indexPath.section]]
-        let contactID = contactInfo?[indexPath.row].id
-        viewModel.deleteContactFromDatabase(contactID: contactID)
+        let sectionTitle = contactsSectionTitles[indexPath.section]
+        let id = contactsDictionary[sectionTitle]?[indexPath.row].id
+        viewModel.deleteContactFromDatabase(contactID: id)
         
-        self.updateDataFromModel()
+        contactsDictionary[sectionTitle]?.remove(at: indexPath.row)
+        contactsTable.deleteRows(at: [indexPath], with: .automatic)
+        
+        if contactsDictionary[sectionTitle]?.isEmpty ?? false {
+            contactsDictionary.removeValue(forKey: sectionTitle)
+            contactsSectionTitles.remove(at: indexPath.section)
+            
+            contactsTable.reloadData()
+        }
     }
     
 }
