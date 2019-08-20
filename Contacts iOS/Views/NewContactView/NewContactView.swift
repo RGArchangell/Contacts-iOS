@@ -81,11 +81,14 @@ class NewContactView: UIView {
     
     func getInfoFromFields() -> [String: Any] {
         
+        var notes = note.text
+        if note.text.isEmptyOrNil { notes = "-" }
+        
         let data = ["firstName": firstName.text ?? "",
                     "lastName": lastName.text ?? "",
                     "phone": phone.text ?? "",
                     "ringtone": ringtone.titleLabel?.text ?? "",
-                    "notes": note.text ?? "",
+                    "notes": notes ?? "",
                     "avatar": avatar.image(for: .normal) ?? UIImage()] as [String: Any]
         
         return data
