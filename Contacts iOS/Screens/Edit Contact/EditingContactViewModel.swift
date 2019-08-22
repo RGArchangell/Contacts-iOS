@@ -11,12 +11,7 @@ import Realm
 import RealmSwift
 import UIKit
 
-protocol EditingContactViewModelDelegate: class {
-    func didRequestImagePicker(_ requestedView: UIView)
-}
-
 class EditingContactViewModel {
-    private let realm = try? Realm()
     private let realmManager: RealmManager
     private var preloadedContact: Contact?
     private var id: Int
@@ -30,10 +25,8 @@ class EditingContactViewModel {
     private (set) var notes: String?
     private (set) var avatar: UIImage?
     
-    weak var delegate: EditingContactViewModelDelegate?
-    
-    init(id: Int, type: EditorType) {
-        self.realmManager = RealmManager()
+    init(id: Int, type: EditorType, realmManager: RealmManager) {
+        self.realmManager = realmManager
         self.id = id
         self.type = type
         
@@ -61,27 +54,18 @@ class EditingContactViewModel {
         self.avatar = getImage(imageName: avatarName)
     }
     
-    func saveContactData(contact: [String: Any]) {
-        guard
-            let firstName = contact["firstName"] as? String,
-            let lastName = contact["lastName"] as? String,
-            let phone = contact["phone"] as? String,
-            let ringtone = contact["ringtone"] as? String,
-            let notes = contact["notes"] as? String,
-            let avatar = contact["avatar"] as? UIImage
-        else
-        { return }
-        
+    func saveContactData(newContact: NewContact) {
         print("saving")
         
         let imageName = "\(id)_avatar.jpg"
+        let avatar = newContact.avatar
         
         let contact = Contact(id: id,
-                              firstName: firstName,
-                              lastName: lastName,
-                              phone: phone,
-                              notes: notes,
-                              ringtone: ringtone,
+                              firstName: newContact.firstName,
+                              lastName: newContact.lastName,
+                              phone: newContact.phone,
+                              notes: newContact.notes,
+                              ringtone: newContact.ringtone,
                               avatar: imageName)
         
         switch type {
@@ -100,10 +84,6 @@ class EditingContactViewModel {
     
     func avatarHasUpdated() {
         avatarDidChanged = true
-    }
-    
-    func requestImagePicker(_ requestedView: UIView) {
-        delegate?.didRequestImagePicker(requestedView)
     }
     
     func deleteContactFromDatabase() {

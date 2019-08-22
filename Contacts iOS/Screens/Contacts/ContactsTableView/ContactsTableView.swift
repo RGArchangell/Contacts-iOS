@@ -16,7 +16,7 @@ class ContactsTableView: UIView {
     @IBOutlet private weak var contactsTable: UITableView!
     
     private let cellReuseIdentifier = "ContactCell"
-    private var viewModel = ContactsTableViewModel()
+    private var viewModel = ContactsTableViewModel(realmManager: RealmManager())
     private var contactsDictionary = [String: [Name]]()
     private var tableContactsDictionary = [String: [Name]]()
     private var contactsSectionTitles = [String]()
@@ -55,9 +55,10 @@ class ContactsTableView: UIView {
     }
     
     private func updateDataFromModel() {
+        
         contactsDictionary.removeAll()
         contactsSectionTitles.removeAll()
-        
+    
         for name in viewModel.names {
             let contactKey = String(name.last.prefix(1))
             

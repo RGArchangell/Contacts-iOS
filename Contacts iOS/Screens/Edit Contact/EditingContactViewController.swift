@@ -13,6 +13,7 @@ protocol EditingContactViewControllerDelegate: class {
     func creatingAvaliable()
     func creatingIsNotAvaliable()
     func contactDeleted()
+    func requestImagePicker(_ requestedView: UIView)
 }
 
 class EditingContactViewController: UIViewController {
@@ -46,7 +47,7 @@ class EditingContactViewController: UIViewController {
         newContactView.checkAvaliability()
     }
     
-    func getInfoFromFields() -> [String: Any] {
+    func getInfoFromFields() -> NewContact {
         let info = newContactView.getInfoFromFields()
         return info
     }
@@ -69,7 +70,7 @@ extension EditingContactViewController: NewContactViewDelegate {
     }
     
     func didRequestImagePicker(_ requestedView: UIView) {
-        viewModel.requestImagePicker(requestedView)
+        delegate?.requestImagePicker(requestedView)
     }
     
     func imageHasUpdated() {

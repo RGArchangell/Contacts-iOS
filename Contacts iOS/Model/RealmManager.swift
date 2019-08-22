@@ -10,26 +10,42 @@ import Foundation
 import RealmSwift
 
 class RealmManager {
-    var realm = try? Realm()
+    lazy var realm = getRealm()
+    
+    private func getRealm() -> Realm? {
+        do {
+            let realm = try Realm()
+            return realm
+        } catch _ {
+            fatalError()
+        }
+    }
     
     // delete table
     func deleteDatabase() {
-        try? realm?.write {
-            realm?.deleteAll()
+        do {
+            try realm?.write {
+                realm?.deleteAll()
+            }
+        } catch _ {
+            fatalError()
         }
     }
     
     // delete particular object
     func deleteObject(objs: Object) {
-        try? realm?.write {
-            realm?.delete(objs)
+        do {
+            try realm?.write {
+                realm?.delete(objs)
+            }
+        } catch _ {
+            fatalError()
         }
     }
     
     //Save array of objects to database
     func saveObjects(objs: Object) {
         try? realm?.write {
-            // If update = false, adds the object
             realm?.add(objs, update: false)
         }
     }

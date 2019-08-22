@@ -22,7 +22,7 @@ class EditingContactViewCoordinator: Coordinator {
     weak var delegate: EditingContactViewCoordinatorDelegate?
     
     lazy var newContactViewController = EditingContactViewController(viewModel: newContactViewModel, type: type)
-    lazy var newContactViewModel = EditingContactViewModel(id: id, type: type)
+    lazy var newContactViewModel = EditingContactViewModel(id: id, type: type, realmManager: RealmManager())
     
     init(rootViewController: RootNavigationController, id: Int, type: EditorType) {
         self.rootViewController = rootViewController
@@ -35,7 +35,6 @@ class EditingContactViewCoordinator: Coordinator {
     }
     
     private func loadScreen() {
-        newContactViewModel.delegate = self
         newContactViewController.delegate = self
         
         rootViewController.pushViewController(newContactViewController, animated: true)
@@ -68,7 +67,7 @@ class EditingContactViewCoordinator: Coordinator {
     
     @objc private func saveContact() {
         let contact = newContactViewController.getInfoFromFields()
-        newContactViewModel.saveContactData(contact: contact)
+        newContactViewModel.saveContactData(newContact: contact)
         
         goBack()
     }
@@ -88,6 +87,14 @@ class EditingContactViewCoordinator: Coordinator {
 
 extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
     
+    func requestImagePicker(_ requestedView: UIView) {
+        let imagePickerCoordinator = ImagePickerCoordinator(rootViewController: rootViewController, requestedView)
+        
+        imagePickerCoordinator.delegate = self
+        addChildCoordinator(imagePickerCoordinator)
+        imagePickerCoordinator.start()
+    }
+    
     func contactDeleted() {
         goBackAfterDeletion()
     }
@@ -102,18 +109,6 @@ extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
     
     func viewWillAppear() {
         setNavigationBarPreferences()
-    }
-    
-}
-
-extension EditingContactViewCoordinator: EditingContactViewModelDelegate {
-
-    func didRequestImagePicker(_ requestedView: UIView) {
-        let imagePickerCoordinator = ImagePickerCoordinator(rootViewController: rootViewController, requestedView)
-        
-        imagePickerCoordinator.delegate = self
-        addChildCoordinator(imagePickerCoordinator)
-        imagePickerCoordinator.start()
     }
     
 }

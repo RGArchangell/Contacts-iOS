@@ -13,7 +13,7 @@ class ContactsTableViewCoordinator: Coordinator {
     
     private let rootViewController: RootNavigationController
     lazy var contactsTableViewController = ContactsTableViewController(viewModel: contactsTableViewModel)
-    lazy var contactsTableViewModel = ContactsTableViewModel()
+    lazy var contactsTableViewModel = ContactsTableViewModel(realmManager: RealmManager())
     
     init(rootViewController: RootNavigationController) {
         self.rootViewController = rootViewController

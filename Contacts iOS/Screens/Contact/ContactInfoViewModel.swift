@@ -12,7 +12,7 @@ import UIKit
 class ContactInfoViewModel {
     
     private var contactID: Int
-    private let realmManager = RealmManager()
+    private let realmManager: RealmManager
     
     private(set) var name: String?
     private(set) var phone: String?
@@ -20,7 +20,8 @@ class ContactInfoViewModel {
     private(set) var ringtone: String?
     private(set) var avatar: UIImage?
     
-    init(contactID: Int) {
+    init(contactID: Int, realmManager: RealmManager) {
+        self.realmManager = realmManager
         self.contactID = contactID
         loadData()
     }
@@ -35,7 +36,9 @@ class ContactInfoViewModel {
             }
         }
         
-        self.name = loadedContact.firstName + " " + loadedContact.lastName
+        self.name = loadedContact.firstName.trimmingCharacters(in: .whitespaces) +
+            " " + loadedContact.lastName.trimmingCharacters(in: .whitespaces)
+        
         self.phone = loadedContact.phone
         self.ringtone = loadedContact.ringtone
         self.notes = loadedContact.notes

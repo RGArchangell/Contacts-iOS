@@ -79,19 +79,20 @@ class NewContactView: UIView {
         }
     }
     
-    func getInfoFromFields() -> [String: Any] {
+    func getInfoFromFields() -> NewContact {
         
         var notes = note.text
         if note.text.isEmptyOrNil { notes = "-" }
         
-        let data = ["firstName": firstName.text ?? "",
-                    "lastName": lastName.text ?? "",
-                    "phone": phone.text ?? "",
-                    "ringtone": ringtone.titleLabel?.text ?? "",
-                    "notes": notes ?? "",
-                    "avatar": avatar.image(for: .normal) ?? UIImage()] as [String: Any]
+        let contact = NewContact(
+            firstName: firstName.text ?? "",
+            lastName: lastName.text ?? "",
+            phone: phone.text ?? "",
+            ringtone: ringtone.titleLabel?.text ?? "",
+            notes: notes ?? "",
+            avatar: avatar.image(for: .normal) ?? UIImage())
         
-        return data
+        return contact
     }
     
     func loadModel(viewModel: EditingContactViewModel) {
@@ -143,7 +144,6 @@ extension NewContactView: UIPickerViewDelegate, UIPickerViewDataSource {
         picker = UIPickerView()
         picker.delegate = self
         picker.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        picker.setValue(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), forKey: "textColor")
         picker.autoresizingMask = .flexibleWidth
         picker.contentMode = .scaleToFill
         

@@ -68,10 +68,6 @@ public func callNumber(phoneNumber: String) {
         
     let application: UIApplication = UIApplication.shared
     if application.canOpenURL(phoneCallURL) {
-        if #available(iOS 10.0, *) {
-            application.open(phoneCallURL, options: [:], completionHandler: nil)
-        } else {
-            application.openURL(phoneCallURL as URL)
-        }
+        application.open(phoneCallURL, options: [:], completionHandler: nil)
     }
 }

@@ -43,6 +43,7 @@
 		84D87F5B230566760090A3C2 /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D87F5A230566760090A3C2 /* RootNavigationController.swift */; };
 		84D87F60230582DB0090A3C2 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D87F5F230582DB0090A3C2 /* Name.swift */; };
 		84D87F622305861E0090A3C2 /* UISearchBarExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D87F612305861E0090A3C2 /* UISearchBarExtensions.swift */; };
+		84E9BF64230E6932001F8877 /* NewContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E9BF63230E6932001F8877 /* NewContactModel.swift */; };
 		BD0F39EFE26DE5DFC0C1DDFB /* Pods_Contacts_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60CC04664263BB3D44F4A708 /* Pods_Contacts_iOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +88,7 @@
 		84D87F5A230566760090A3C2 /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationController.swift; sourceTree = "<group>"; };
 		84D87F5F230582DB0090A3C2 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		84D87F612305861E0090A3C2 /* UISearchBarExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISearchBarExtensions.swift; sourceTree = "<group>"; };
+		84E9BF63230E6932001F8877 /* NewContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewContactModel.swift; sourceTree = "<group>"; };
 		B8242ED7914F70CE637A4DF1 /* Pods-Contacts iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contacts iOS.debug.xcconfig"; path = "Target Support Files/Pods-Contacts iOS/Pods-Contacts iOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,11 +135,10 @@
 			isa = PBXGroup;
 			children = (
 				8410B9B822FD2689006B3A2A /* Info.plist */,
+				84E9BF61230D1975001F8877 /* Main UI */,
+				84E9BF62230D2013001F8877 /* Screens */,
 				8410B9BE22FD26A9006B3A2A /* Supporting Files */,
-				84C083B722FD37BC0092B73C /* View Controllers */,
-				84C083A422FD2B830092B73C /* Coordinators */,
 				84C083AC22FD2C4E0092B73C /* Model */,
-				84C083B122FD324F0092B73C /* Views */,
 				848A1F6F23016CC9009CEC68 /* Extensions */,
 			);
 			path = "Contacts iOS";
@@ -180,81 +181,17 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		848A1F782301B935009CEC68 /* EditingContactViewController */ = {
-			isa = PBXGroup;
-			children = (
-				848A1F722301B91C009CEC68 /* EditingContactViewController.swift */,
-				848A1F732301B91C009CEC68 /* EditingContactViewController.xib */,
-				848A1F762301B925009CEC68 /* EditingContactViewModel.swift */,
-			);
-			path = EditingContactViewController;
-			sourceTree = "<group>";
-		};
-		84A94A23230682120019E1BC /* ContactInfoViewController */ = {
-			isa = PBXGroup;
-			children = (
-				84A94A1D230681FE0019E1BC /* ContactInfoViewController.swift */,
-				84A94A1E230681FE0019E1BC /* ContactInfoViewController.xib */,
-				84A94A212306820B0019E1BC /* ContactInfoViewModel.swift */,
-			);
-			path = ContactInfoViewController;
-			sourceTree = "<group>";
-		};
-		84C083A422FD2B830092B73C /* Coordinators */ = {
-			isa = PBXGroup;
-			children = (
-				84C083A022FD2B0C0092B73C /* Coordinator.swift */,
-				84C083A222FD2B4B0092B73C /* MainCoordinator.swift */,
-				84C083A522FD2BC70092B73C /* ContactsTableViewCoordinator.swift */,
-				84A94A24230683160019E1BC /* ContactInfoViewCoordinator.swift */,
-				848A1F702301B8F8009CEC68 /* EditingContactViewCoordinator.swift */,
-				843FFF732303E0A3009AB2B1 /* ImagePickerCoordinator.swift */,
-			);
-			path = Coordinators;
-			sourceTree = "<group>";
-		};
 		84C083AC22FD2C4E0092B73C /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				84C083A922FD2C390092B73C /* ContactModel.swift */,
+				84E9BF63230E6932001F8877 /* NewContactModel.swift */,
 				84C083C122FD4EBA0092B73C /* RealmManager.swift */,
 				84D87F5F230582DB0090A3C2 /* Name.swift */,
 				84CB710523069BD500A7F07E /* PublicFunctions.swift */,
 				84CB71092306C11A00A7F07E /* Enums */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		84C083B122FD324F0092B73C /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				84C083C322FD641C0092B73C /* ContactsTableView */,
-				848A1F6C230147AA009CEC68 /* NewContactView */,
-				843FFF7923040D3C009AB2B1 /* ContactView */,
-				84D87F5223054E740090A3C2 /* ContactsTableViewCell */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		84C083B622FD37AE0092B73C /* ContactsTableViewController */ = {
-			isa = PBXGroup;
-			children = (
-				84C083B222FD37A30092B73C /* ContactsTableViewController.swift */,
-				84C083B322FD37A30092B73C /* ContactsTableViewController.xib */,
-				84C083B822FD381D0092B73C /* ContactsTableViewModel.swift */,
-			);
-			path = ContactsTableViewController;
-			sourceTree = "<group>";
-		};
-		84C083B722FD37BC0092B73C /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				84C083B622FD37AE0092B73C /* ContactsTableViewController */,
-				848A1F782301B935009CEC68 /* EditingContactViewController */,
-				84D87F5C230567110090A3C2 /* RootNavigationController */,
-				84A94A23230682120019E1BC /* ContactInfoViewController */,
-			);
-			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		84C083C322FD641C0092B73C /* ContactsTableView */ = {
@@ -299,6 +236,64 @@
 				84D87F5A230566760090A3C2 /* RootNavigationController.swift */,
 			);
 			path = RootNavigationController;
+			sourceTree = "<group>";
+		};
+		84E9BF5E230D18DC001F8877 /* Contacts */ = {
+			isa = PBXGroup;
+			children = (
+				84C083A522FD2BC70092B73C /* ContactsTableViewCoordinator.swift */,
+				84C083B222FD37A30092B73C /* ContactsTableViewController.swift */,
+				84C083B322FD37A30092B73C /* ContactsTableViewController.xib */,
+				84C083B822FD381D0092B73C /* ContactsTableViewModel.swift */,
+				84D87F5223054E740090A3C2 /* ContactsTableViewCell */,
+				84C083C322FD641C0092B73C /* ContactsTableView */,
+			);
+			path = Contacts;
+			sourceTree = "<group>";
+		};
+		84E9BF5F230D190E001F8877 /* Edit Contact */ = {
+			isa = PBXGroup;
+			children = (
+				843FFF732303E0A3009AB2B1 /* ImagePickerCoordinator.swift */,
+				848A1F702301B8F8009CEC68 /* EditingContactViewCoordinator.swift */,
+				848A1F722301B91C009CEC68 /* EditingContactViewController.swift */,
+				848A1F732301B91C009CEC68 /* EditingContactViewController.xib */,
+				848A1F762301B925009CEC68 /* EditingContactViewModel.swift */,
+				848A1F6C230147AA009CEC68 /* NewContactView */,
+			);
+			path = "Edit Contact";
+			sourceTree = "<group>";
+		};
+		84E9BF60230D193D001F8877 /* Contact */ = {
+			isa = PBXGroup;
+			children = (
+				84A94A24230683160019E1BC /* ContactInfoViewCoordinator.swift */,
+				84A94A1D230681FE0019E1BC /* ContactInfoViewController.swift */,
+				84A94A1E230681FE0019E1BC /* ContactInfoViewController.xib */,
+				84A94A212306820B0019E1BC /* ContactInfoViewModel.swift */,
+				843FFF7923040D3C009AB2B1 /* ContactView */,
+			);
+			path = Contact;
+			sourceTree = "<group>";
+		};
+		84E9BF61230D1975001F8877 /* Main UI */ = {
+			isa = PBXGroup;
+			children = (
+				84C083A022FD2B0C0092B73C /* Coordinator.swift */,
+				84C083A222FD2B4B0092B73C /* MainCoordinator.swift */,
+				84D87F5C230567110090A3C2 /* RootNavigationController */,
+			);
+			path = "Main UI";
+			sourceTree = "<group>";
+		};
+		84E9BF62230D2013001F8877 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				84E9BF60230D193D001F8877 /* Contact */,
+				84E9BF5F230D190E001F8877 /* Edit Contact */,
+				84E9BF5E230D18DC001F8877 /* Contacts */,
+			);
+			path = Screens;
 			sourceTree = "<group>";
 		};
 		A05B1DCA56BA8172A4C81FBB /* Frameworks */ = {
@@ -423,7 +418,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${PODS_ROOT}/SwiftLint/swiftlint\nif which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n\n";
 		};
 		E3D87A3129E1A58B4CB614CC /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -477,6 +472,7 @@
 				8472A4CD2309B00900972B88 /* OptionalExtensions.swift in Sources */,
 				848A1F6E23016CC2009CEC68 /* UIImageExtensions.swift in Sources */,
 				84D87F5B230566760090A3C2 /* RootNavigationController.swift in Sources */,
+				84E9BF64230E6932001F8877 /* NewContactModel.swift in Sources */,
 				843FFF742303E0A3009AB2B1 /* ImagePickerCoordinator.swift in Sources */,
 				84C083A322FD2B4C0092B73C /* MainCoordinator.swift in Sources */,
 				84C083B422FD37A30092B73C /* ContactsTableViewController.swift in Sources */,

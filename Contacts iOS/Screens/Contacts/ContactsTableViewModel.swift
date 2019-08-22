@@ -16,15 +16,14 @@ protocol ContactsTableViewModelDelegate: class {
 
 class ContactsTableViewModel {
     
-    private let realm = try? Realm()
     private let realmManager: RealmManager
     private var contactList: [Contact]
     
     weak var delegate: ContactsTableViewModelDelegate?
     var names: [Name]
     
-    init() {
-        self.realmManager = RealmManager()
+    init(realmManager: RealmManager) {
+        self.realmManager = realmManager
         
         self.contactList = []
         self.names = []
