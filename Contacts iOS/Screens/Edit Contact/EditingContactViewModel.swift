@@ -30,15 +30,8 @@ class EditingContactViewModel {
         self.id = id
         self.type = type
         
-        if let objects = realmManager.getObjects(type: Contact.self) {
-            for element in objects {
-                if let contact = element as? Contact, contact.id == id {
-                    self.preloadedContact = contact
-                }
-            }
-        }
-        
         if type == .edit {
+            self.preloadedContact = realmManager.getObjectByID(id, type: Contact.self)
             self.getContactData()
         }
     }

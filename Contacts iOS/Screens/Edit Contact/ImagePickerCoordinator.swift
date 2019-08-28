@@ -18,11 +18,11 @@ class ImagePickerCoordinator: Coordinator {
     private let rootViewController: RootNavigationController
     
     weak var delegate: ImagePickerCoordinatorDelegate?
-    weak var requestedView: UIView?
+    weak var requestedView: NewContactView?
     
     init(rootViewController: RootNavigationController, _ requestedView: UIView) {
         self.rootViewController = rootViewController
-        self.requestedView = requestedView
+        self.requestedView = requestedView as? NewContactView
     }
     
     override func start() {
@@ -53,10 +53,16 @@ class ImagePickerCoordinator: Coordinator {
         
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        guard let requestedView = requestedView as? NewContactView else { return }
-        rootViewController.imagePickerDelegate = requestedView
+        rootViewController.imagePickerDelegate = self
         rootViewController.present(actionSheet, animated: true, completion: nil)
-        
+    }
+    
+}
+
+extension ImagePickerCoordinator: RootNavigationControllerDelegate {
+    
+    func avatarImageHasUpdated(_ newImage: UIImage) {
+        requestedView?.avatarImageHasUpdated(newImage)
         delegate?.сoordinatorDidFinish(self)
     }
     

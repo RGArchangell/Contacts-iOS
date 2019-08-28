@@ -27,15 +27,7 @@ class ContactInfoViewModel {
     }
     
     func loadData() {
-        var loadedContact = Contact()
-        if let objects = realmManager.getObjects(type: Contact.self) {
-            for element in objects {
-                if let contact = element as? Contact, contact.id == contactID {
-                    loadedContact = contact
-                }
-            }
-        }
-        
+        let loadedContact = realmManager.getObjectByID(contactID, type: Contact.self) ?? Contact()
         self.name = loadedContact.firstName.trimmingCharacters(in: .whitespaces) +
             " " + loadedContact.lastName.trimmingCharacters(in: .whitespaces)
         

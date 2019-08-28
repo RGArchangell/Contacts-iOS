@@ -21,38 +21,40 @@ class RealmManager {
         }
     }
     
-    // delete table
-    func deleteDatabase() {
+    private func checkRealm(action: () -> Void) {
         do {
             try realm?.write {
-                realm?.deleteAll()
+                action()
             }
         } catch _ {
             fatalError()
+        }
+    }
+    
+    // delete table
+    func deleteDatabase() {
+        checkRealm {
+            realm?.deleteAll()
         }
     }
     
     // delete particular object
     func deleteObject(objs: Object) {
-        do {
-            try realm?.write {
-                realm?.delete(objs)
-            }
-        } catch _ {
-            fatalError()
+        checkRealm {
+            realm?.delete(objs)
         }
     }
     
     //Save array of objects to database
     func saveObjects(objs: Object) {
-        try? realm?.write {
+        checkRealm {
             realm?.add(objs, update: false)
         }
     }
     
     // editing the object
     func editObjects(objs: Object) {
-        try? realm?.write {
+        checkRealm {
             // If update = true, objects that are already in the Realm will be
             // updated instead of added a new.
             realm?.add(objs, update: true)
@@ -60,14 +62,13 @@ class RealmManager {
     }
     
     //Returs an array as Results<object>?
-    func getObjects(type: Object.Type) -> Results<Object>? {
+    func getObjects<T: Object>(type: T.Type) -> Results<T>? {
         return realm?.objects(type)
     }
     
-    func getObjectByID(_ id: Int, type: Object.Type) -> Object? {
-        let objects = getObjects(type: type)
-        
-        return objects?[id]
+    func getObjectByID<T: Object>(_ id: Int, type: T.Type) -> T? {
+        let objects = realm?.objects(type)
+        return objects?[id - 1]
     }
     
     func incrementID() -> Int {

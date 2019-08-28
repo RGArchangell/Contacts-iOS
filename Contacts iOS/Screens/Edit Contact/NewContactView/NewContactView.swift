@@ -41,6 +41,7 @@ class NewContactView: UIView {
     private var toolBar = UIToolbar()
     private var picker = UIPickerView()
     private var pickedRingtone = "Default"
+    private let numberRegex = NSRegularExpression("^[+|0-9][0-9]{4}[0-9]*")
     
     weak var delegate: NewContactViewDelegate?
     
@@ -64,11 +65,20 @@ class NewContactView: UIView {
     }
     
     private func checkMainFields() -> Bool {
-        if !firstName.text.isEmptyOrNil, !lastName.text.isEmptyOrNil, !phone.text.isEmptyOrNil {
-            return true
+        if firstName.text.isEmptyOrNil || lastName.text.isEmptyOrNil || phone.text.isEmptyOrNil {
+            return false
         }
         
-        return false
+        guard let number = phone.text else { return false }
+        let range = NSRange(location: 0, length: number.utf16.count)
+        
+        if numberRegex.firstMatch(in: number, options: [], range: range) == nil {
+            return false
+        }
+        
+        if number.count > 15 { return false }
+        
+        return true
     }
     
     func checkAvaliability() {
@@ -108,6 +118,12 @@ class NewContactView: UIView {
         deleteField.isHidden = false
     }
     
+    func avatarImageHasUpdated(_ newImage: UIImage) {
+        self.avatar.contentMode = .scaleToFill
+        self.avatar.setImage(newImage, for: .normal)
+        delegate?.imageHasUpdated()
+    }
+    
     @IBAction private func changeRingtoneInitiated(_ sender: UIButton) {
         self.endEditing(true)
         createPicker()
@@ -124,16 +140,6 @@ class NewContactView: UIView {
     
     @IBAction private func deleteButtonTapped(_ sender: UIButton) {
         delegate?.deleteRequested()
-    }
-    
-}
-
-extension NewContactView: RootNavigationControllerDelegate {
-    
-    func avatarImageHasUpdated(_ newImage: UIImage) {
-        self.avatar.contentMode = .scaleToFill
-        self.avatar.setImage(newImage, for: .normal)
-        delegate?.imageHasUpdated()
     }
     
 }

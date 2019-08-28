@@ -18,6 +18,7 @@ class ContactsTableViewController: UIViewController {
     
     weak var delegate: ContactsTableViewControllerDelegate?
     private var viewModel: ContactsTableViewModel
+    private let cellReuseIdentifier = "ContactCell"
     
     init(viewModel: ContactsTableViewModel) {
         self.viewModel = viewModel
@@ -30,7 +31,7 @@ class ContactsTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         viewModel.loadContacts()
-        contactsTableView.viewWillAppear()
+        contactsTableView.setTableViewDataSource(viewController: self)
         delegate?.viewWillAppear()
     }
     
@@ -38,6 +39,59 @@ class ContactsTableViewController: UIViewController {
         viewModel.loadNames {
             self.contactsTableView.setViewModel(viewModel: self.viewModel)
             self.contactsTableView.reloadTable()
+        }
+    }
+    
+}
+
+extension ContactsTableViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.contactsSectionTitles.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let contactKey = viewModel.contactsSectionTitles[section]
+        
+        guard let contactValues = viewModel.tableContactsDictionary[contactKey] else { return 0 }
+        return contactValues.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let contactCell: ContactsTableViewCell = tableView.dequeueReusableCell(
+            withIdentifier: cellReuseIdentifier) as? ContactsTableViewCell else { return UITableViewCell() }
+        
+        let contactKey = viewModel.contactsSectionTitles[indexPath.section]
+        guard let contactValues = viewModel.tableContactsDictionary[contactKey] else { return UITableViewCell() }
+        
+        let firstName = contactValues[indexPath.row].first
+        let lastName = contactValues[indexPath.row].last
+        
+        contactCell.loadNames(firstName: firstName, lastName: lastName)
+        return contactCell
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return viewModel.contactsSectionTitles[section]
+    }
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return viewModel.contactsSectionTitles
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        
+        let sectionTitle = viewModel.contactsSectionTitles[indexPath.section]
+        let id = viewModel.tableContactsDictionary[sectionTitle]?[indexPath.row].id
+        viewModel.deleteContactFromDatabase(contactID: id)
+        
+        viewModel.deleteFromDictionary(sectionTitle, indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        
+        if viewModel.tableContactsDictionary[sectionTitle]?.isEmpty ?? false {
+            viewModel.clearSection(sectionTitle, indexPath)
+            tableView.reloadData()
         }
     }
     
