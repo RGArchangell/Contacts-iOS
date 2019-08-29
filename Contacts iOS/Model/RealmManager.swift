@@ -68,6 +68,8 @@ class RealmManager {
     
     func getObjectByID<T: Object>(_ id: Int, type: T.Type) -> T? {
         let objects = realm?.objects(type)
+        guard let maxID = objects?.count else { return nil }
+        if id > maxID { return nil }
         return objects?[id - 1]
     }
     

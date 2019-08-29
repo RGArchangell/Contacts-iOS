@@ -28,12 +28,8 @@ protocol NewContactViewDelegate: class {
 class NewContactView: UIView {
     
     @IBOutlet private var contentView: UIView!
-    @IBOutlet private weak var firstName: UITextField! {
-        didSet { firstName.delegate = self }
-    }
-    @IBOutlet private weak var lastName: UITextField! {
-        didSet { lastName.delegate = self }
-    }
+    @IBOutlet private weak var firstName: UITextField!
+    @IBOutlet private weak var lastName: UITextField!
     @IBOutlet private weak var avatar: UIButton!
     @IBOutlet private weak var phone: UITextField!
     @IBOutlet private weak var ringtone: UIButton!
@@ -68,6 +64,7 @@ class NewContactView: UIView {
         contentView.frame = bounds
         addSubview(contentView)
         
+        addInputAccessoryForTextFields(textFields: [phone], nextTextField: note, dismissable: false, previousNextable: true)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification,
@@ -76,8 +73,8 @@ class NewContactView: UIView {
                                                selector: #selector(keyboardWillHide),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
-        
-        addInputAccessoryForTextFields(textFields: [phone], nextTextField: note, dismissable: false, previousNextable: true)
+        firstName.addTarget(lastName, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
+        lastName.addTarget(phone, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
     }
     
     private func checkMainFields() -> Bool {
@@ -143,27 +140,6 @@ class NewContactView: UIView {
     
     func showDeleteField() {
         deleteField.isHidden = false
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        guard var userInfo = notification.userInfo else { return }
-        guard let keyboard = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue else { return }
-        var keyboardFrame: CGRect = (keyboard).cgRectValue
-        keyboardFrame = self.convert(keyboardFrame, from: nil)
-        
-        var contentInset: UIEdgeInsets = self.contactScrollView.contentInset
-        contentInset.bottom = keyboardFrame.size.height
-        contactScrollView.contentInset = contentInset
-    }
-    
-    @objc func keyboardWillHide(notification: NSNotification) {
-        let contentInset: UIEdgeInsets = UIEdgeInsets.zero
-        contactScrollView.contentInset = contentInset
     }
     
     func avatarImageHasUpdated(_ newImage: UIImage) {
@@ -242,20 +218,14 @@ extension NewContactView: UIPickerViewDelegate, UIPickerViewDataSource {
     
 }
 
-extension NewContactView: UITextFieldDelegate {
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = textField.text as NSString? else { return false }
-        let newText = (text).replacingCharacters(in: range, with: string)
-        let numberOfChars = newText.count
-        return numberOfChars <= 15
-    }
-    
-}
-
 extension NewContactView: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         let numberOfChars = newText.count
         return numberOfChars <= 2000    // Limit Value
@@ -268,6 +238,22 @@ extension NewContactView: UITextViewDelegate {
             textView.frame.size.height = textView.contentSize.height
             textView.isScrollEnabled = false 
         }
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard var userInfo = notification.userInfo else { return }
+        guard let keyboard = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue else { return }
+        var keyboardFrame: CGRect = (keyboard).cgRectValue
+        keyboardFrame = self.convert(keyboardFrame, from: nil)
+        
+        var contentInset: UIEdgeInsets = self.contactScrollView.contentInset
+        contentInset.bottom = keyboardFrame.size.height + 100
+        contactScrollView.contentInset = contentInset
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInset: UIEdgeInsets = UIEdgeInsets.zero
+        contactScrollView.contentInset = contentInset
     }
     
 }

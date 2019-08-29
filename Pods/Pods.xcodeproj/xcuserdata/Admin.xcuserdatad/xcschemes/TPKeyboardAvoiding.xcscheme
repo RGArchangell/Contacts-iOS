@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D13F1BCD198E671EECD8AD59E33B452D"
-               BuildableName = "Pods_Contacts_iOS.framework"
-               BlueprintName = "Pods-Contacts iOS"
+               BlueprintIdentifier = "24A8133C9CCACFF31187FDEF6C595D43"
+               BuildableName = "TPKeyboardAvoiding.framework"
+               BlueprintName = "TPKeyboardAvoiding"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D13F1BCD198E671EECD8AD59E33B452D"
-            BuildableName = "Pods_Contacts_iOS.framework"
-            BlueprintName = "Pods-Contacts iOS"
+            BlueprintIdentifier = "24A8133C9CCACFF31187FDEF6C595D43"
+            BuildableName = "TPKeyboardAvoiding.framework"
+            BlueprintName = "TPKeyboardAvoiding"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
