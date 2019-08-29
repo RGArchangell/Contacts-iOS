@@ -20,7 +20,7 @@ class ContactView: UIView {
     @IBOutlet private weak var name: UILabel!
     @IBOutlet private weak var phone: UIButton!
     @IBOutlet private weak var ringtone: UILabel!
-    @IBOutlet private weak var note: UILabel!
+    @IBOutlet private weak var note: UITextView!
     
     weak var delegate: ContactViewDelegate?
     
@@ -41,12 +41,22 @@ class ContactView: UIView {
         addSubview(contentView)
     }
     
+    private func checkContentSize() {
+        if note.contentSize.height >= 200 {
+            note.isScrollEnabled = true
+        } else {
+            note.frame.size.height = note.contentSize.height
+            note.isScrollEnabled = false
+        }
+    }
+    
     func loadModel(viewModel: ContactInfoViewModel) {
         name.text = viewModel.name
         phone.setTitle(viewModel.phone, for: .normal)
         ringtone.text = viewModel.ringtone
         note.text = viewModel.notes
         avatar.image = viewModel.avatar?.circleMasked
+        checkContentSize()
     }
 
     @IBAction private func phoneButtonTouched(_ sender: UIButton) {

@@ -13,11 +13,12 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewContactView" customModule="Contacts_iOS" customModuleProvider="target">
             <connections>
                 <outlet property="avatar" destination="jVZ-Gx-ABS" id="hPS-uN-vvC"/>
+                <outlet property="contactScrollView" destination="Rib-LF-Mz4" id="vUq-S8-ZG7"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="aoz-VP-RIy"/>
                 <outlet property="deleteField" destination="udh-aY-B4L" id="gGo-Uk-9CT"/>
                 <outlet property="firstName" destination="07E-Wi-Lgh" id="13E-eJ-QdS"/>
                 <outlet property="lastName" destination="hKd-1m-0PQ" id="dRM-JF-0oh"/>
-                <outlet property="note" destination="TVf-fH-4K0" id="Urn-QN-bnk"/>
+                <outlet property="note" destination="9Xg-ue-QMK" id="cNp-Tk-UcR"/>
                 <outlet property="phone" destination="pSK-V7-KMY" id="W8M-PA-Y8f"/>
                 <outlet property="ringtone" destination="Xv9-eB-oLt" id="3vN-j1-ZYA"/>
             </connections>
@@ -27,7 +28,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="841"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="scrollableAxes" minimumZoomScale="0.0" maximumZoomScale="0.0" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rib-LF-Mz4" customClass="TPKeyboardAvoidingScrollView">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="top" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="scrollableAxes" minimumZoomScale="0.0" maximumZoomScale="0.0" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rib-LF-Mz4" customClass="TPKeyboardAvoidingScrollView">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="841"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g4V-LZ-ilG">
@@ -81,7 +82,7 @@
                                     </subviews>
                                 </stackView>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="Fh9-j4-lA9">
-                                    <rect key="frame" x="16" y="170" width="398" height="216"/>
+                                    <rect key="frame" x="16" y="170" width="398" height="230.5"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="ypX-qF-H7x">
                                             <rect key="frame" x="0.0" y="0.0" width="398" height="81"/>
@@ -126,7 +127,7 @@
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="JNP-fv-yeh">
-                                            <rect key="frame" x="0.0" y="105" width="398" height="53"/>
+                                            <rect key="frame" x="0.0" y="105" width="398" height="67.5"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jpr-YO-r3g">
                                                     <rect key="frame" x="0.0" y="0.0" width="398" height="18"/>
@@ -134,14 +135,17 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Wake up, Neo..." textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TVf-fH-4K0">
-                                                    <rect key="frame" x="0.0" y="24" width="398" height="22"/>
-                                                    <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" text="-" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="9Xg-ue-QMK">
+                                                    <rect key="frame" x="0.0" y="24" width="398" height="36.5"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="200" id="eEa-Fi-cTC"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits"/>
-                                                </textField>
+                                                </textView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1nh-LO-mvX">
-                                                    <rect key="frame" x="0.0" y="52" width="398" height="1"/>
+                                                    <rect key="frame" x="0.0" y="66.5" width="398" height="1"/>
                                                     <color key="backgroundColor" red="0.92146831750000002" green="0.92162626979999995" blue="0.92145836349999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="cdb-em-Ray"/>
@@ -150,7 +154,7 @@
                                             </subviews>
                                         </stackView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="udh-aY-B4L">
-                                            <rect key="frame" x="0.0" y="182" width="398" height="34"/>
+                                            <rect key="frame" x="0.0" y="196.5" width="398" height="34"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NpC-5x-fgL">
                                                     <rect key="frame" x="0.0" y="0.0" width="398" height="33"/>

@@ -12,7 +12,7 @@ import UIKit
 extension UIView {
     
     func addInputAccessoryForTextFields(textFields: [UITextField],
-                                        nextTextField: UITextField,
+                                        nextTextField: UITextView,
                                         dismissable: Bool,
                                         previousNextable: Bool) {
         for textField in textFields {

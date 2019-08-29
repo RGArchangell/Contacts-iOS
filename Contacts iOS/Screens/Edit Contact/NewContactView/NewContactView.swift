@@ -28,15 +28,22 @@ protocol NewContactViewDelegate: class {
 class NewContactView: UIView {
     
     @IBOutlet private var contentView: UIView!
-    @IBOutlet private weak var firstName: UITextField!
-    @IBOutlet private weak var lastName: UITextField!
+    @IBOutlet private weak var firstName: UITextField! {
+        didSet { firstName.delegate = self }
+    }
+    @IBOutlet private weak var lastName: UITextField! {
+        didSet { lastName.delegate = self }
+    }
     @IBOutlet private weak var avatar: UIButton!
     @IBOutlet private weak var phone: UITextField!
     @IBOutlet private weak var ringtone: UIButton!
-    @IBOutlet private weak var note: UITextField!
+    @IBOutlet private weak var note: UITextView! {
+        didSet { note.delegate = self }
+    }
     @IBOutlet private weak var deleteField: UIStackView! {
         didSet { deleteField.isHidden = true }
     }
+    @IBOutlet private weak var contactScrollView: UIScrollView!
     
     private var toolBar = UIToolbar()
     private var picker = UIPickerView()
@@ -61,6 +68,15 @@ class NewContactView: UIView {
         contentView.frame = bounds
         addSubview(contentView)
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+        
         addInputAccessoryForTextFields(textFields: [phone], nextTextField: note, dismissable: false, previousNextable: true)
     }
     
@@ -79,6 +95,15 @@ class NewContactView: UIView {
         if number.count > 15 { return false }
         
         return true
+    }
+    
+    private func checkContentSize() {
+        if note.contentSize.height >= 200 {
+            note.isScrollEnabled = true
+        } else {
+            note.frame.size.height = note.contentSize.height
+            note.isScrollEnabled = false
+        }
     }
     
     func checkAvaliability() {
@@ -112,10 +137,33 @@ class NewContactView: UIView {
         ringtone.setTitle(viewModel.ringtone, for: .normal)
         note.text = viewModel.notes
         avatar.setImage(viewModel.avatar?.circleMasked, for: .normal)
+        
+        checkContentSize()
     }
     
     func showDeleteField() {
         deleteField.isHidden = false
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard var userInfo = notification.userInfo else { return }
+        guard let keyboard = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue else { return }
+        var keyboardFrame: CGRect = (keyboard).cgRectValue
+        keyboardFrame = self.convert(keyboardFrame, from: nil)
+        
+        var contentInset: UIEdgeInsets = self.contactScrollView.contentInset
+        contentInset.bottom = keyboardFrame.size.height
+        contactScrollView.contentInset = contentInset
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInset: UIEdgeInsets = UIEdgeInsets.zero
+        contactScrollView.contentInset = contentInset
     }
     
     func avatarImageHasUpdated(_ newImage: UIImage) {
@@ -190,6 +238,36 @@ extension NewContactView: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         pickedRingtone = ringtones[row]
+    }
+    
+}
+
+extension NewContactView: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard let text = textField.text as NSString? else { return false }
+        let newText = (text).replacingCharacters(in: range, with: string)
+        let numberOfChars = newText.count
+        return numberOfChars <= 15
+    }
+    
+}
+
+extension NewContactView: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        let numberOfChars = newText.count
+        return numberOfChars <= 2000    // Limit Value
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.contentSize.height >= 200 {
+            textView.isScrollEnabled = true
+        } else {
+            textView.frame.size.height = textView.contentSize.height
+            textView.isScrollEnabled = false 
+        }
     }
     
 }

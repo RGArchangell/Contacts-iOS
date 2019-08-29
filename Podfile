@@ -8,6 +8,5 @@ target 'Contacts iOS' do
   # Pods for Contacts iOS
 pod 'SwiftLint'
 pod 'RealmSwift'
-pod 'TPKeyboardAvoiding'
 
 end
