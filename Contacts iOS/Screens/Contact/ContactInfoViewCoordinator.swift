@@ -20,8 +20,8 @@ class ContactInfoViewCoordinator: Coordinator {
     
     weak var delegate: ContactInfoViewCoordinatorDelegate?
     
-    lazy var contactInfoViewController = ContactInfoViewController(viewModel: contactInfoViewModel)
-    lazy var contactInfoViewModel = ContactInfoViewModel(contactID: contactID, realmManager: RealmManager())
+    //lazy var contactInfoViewController = ContactInfoViewController(viewModel: contactInfoViewModel)
+    //lazy var contactInfoViewModel = ContactInfoViewModel(contactID: contactID, realmManager: RealmManager())
     
     init(rootViewController: RootNavigationController, _ contactID: Int) {
         self.rootViewController = rootViewController
@@ -33,23 +33,21 @@ class ContactInfoViewCoordinator: Coordinator {
     }
     
     private func loadScreen() {
+        let contactInfoViewModel = ContactInfoViewModel(contactID: contactID, realmManager: RealmManager())
+        let contactInfoViewController = ContactInfoViewController(viewModel: contactInfoViewModel)
         contactInfoViewController.delegate = self
         
         rootViewController.pushViewController(contactInfoViewController, animated: true)
     }
     
-    private func setNavigationBarPreferences() {
+    private func setNavigationBarPreferences(_ sender: ContactInfoViewController) {
         rootViewController.navigationBar.prefersLargeTitles = false
-        createButtons()
+        sender.navigationItem.rightBarButtonItem = createEditButton()
     }
     
-    private func createButtons() {
-        createEditButton()
-    }
-    
-    private func createEditButton() {
+    private func createEditButton() -> UIBarButtonItem {
         let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(goToEditScreen))
-        contactInfoViewController.navigationItem.rightBarButtonItem = editButton
+        return editButton
     }
     
     @objc private func goToEditScreen() {
@@ -66,8 +64,8 @@ class ContactInfoViewCoordinator: Coordinator {
 
 extension ContactInfoViewCoordinator: ContactInfoViewControllerDelegate {
     
-    func viewWillAppear() {
-        setNavigationBarPreferences()
+    func viewWillAppear(_ sender: ContactInfoViewController) {
+        setNavigationBarPreferences(sender)
     }
     
 }

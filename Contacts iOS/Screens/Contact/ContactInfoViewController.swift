@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ContactInfoViewControllerDelegate: class {
-    func viewWillAppear()
+    func viewWillAppear(_ sender: ContactInfoViewController)
 }
 
 class ContactInfoViewController: UIViewController {
@@ -30,7 +30,7 @@ class ContactInfoViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        delegate?.viewWillAppear()
+        delegate?.viewWillAppear(self)
         viewModel.loadData()
         contactView.delegate = self
         contactView.loadModel(viewModel: viewModel)

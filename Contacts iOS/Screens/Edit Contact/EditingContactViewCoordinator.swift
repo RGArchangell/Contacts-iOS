@@ -78,8 +78,8 @@ class EditingContactViewCoordinator: Coordinator {
     }
     
     private func goBackAfterDeletion() {
-        rootViewController.popViewController(animated: true)
-        rootViewController.popViewController(animated: true)
+        rootViewController.popViewController(animated: false)
+        rootViewController.popViewController(animated: false)
         coordinatorDidFinish()
     }
     
@@ -87,7 +87,7 @@ class EditingContactViewCoordinator: Coordinator {
 
 extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
     
-    func requestImagePicker(_ requestedView: UIView) {
+    func imagePickerView(_ requestedView: UIView) {
         let imagePickerCoordinator = ImagePickerCoordinator(rootViewController: rootViewController, requestedView)
         
         imagePickerCoordinator.delegate = self

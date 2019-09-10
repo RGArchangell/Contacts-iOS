@@ -13,7 +13,7 @@ protocol EditingContactViewControllerDelegate: class {
     func creatingAvaliable()
     func creatingIsNotAvaliable()
     func contactDeleted()
-    func requestImagePicker(_ requestedView: UIView)
+    func imagePickerView(_ requestedView: UIView)
 }
 
 class EditingContactViewController: UIViewController {
@@ -21,8 +21,9 @@ class EditingContactViewController: UIViewController {
     @IBOutlet private weak var newContactView: NewContactView! {
         didSet {
             newContactView.delegate = self
+            newContactView.loadModel(viewModel: viewModel)
             if type == .edit {
-                newContactView.loadModel(viewModel: viewModel)
+                newContactView.loadFieldsFromModel(viewModel: viewModel)
                 newContactView.showDeleteField()
             }
         }
@@ -70,7 +71,7 @@ extension EditingContactViewController: NewContactViewDelegate {
     }
     
     func didRequestImagePicker(_ requestedView: UIView) {
-        delegate?.requestImagePicker(requestedView)
+        delegate?.imagePickerView(requestedView)
     }
     
     func imageHasUpdated() {

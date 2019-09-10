@@ -44,7 +44,7 @@ class NewContactView: UIView {
     private var toolBar = UIToolbar()
     private var picker = UIPickerView()
     private var pickedRingtone = "Default"
-    private let numberRegex = NSRegularExpression("^[+|0-9][0-9]{4}[0-9]*")
+    private var viewModel: EditingContactViewModel?
     
     weak var delegate: NewContactViewDelegate?
     
@@ -78,20 +78,15 @@ class NewContactView: UIView {
     }
     
     private func checkMainFields() -> Bool {
-        if firstName.text.isEmptyOrNil || lastName.text.isEmptyOrNil || phone.text.isEmptyOrNil {
-            return false
-        }
+        let firstNameText = firstName.text
+        let lastNameText = lastName.text
+        let phoneText = phone.text
         
-        guard let number = phone.text else { return false }
-        let range = NSRange(location: 0, length: number.utf16.count)
+        guard let result = viewModel?.checkFields(firstName: firstNameText,
+                                                  lastName: lastNameText,
+                                                  phone: phoneText) else { return false }
         
-        if numberRegex.firstMatch(in: number, options: [], range: range) == nil {
-            return false
-        }
-        
-        if number.count > 15 { return false }
-        
-        return true
+        return result
     }
     
     private func checkContentSize() {
@@ -128,6 +123,10 @@ class NewContactView: UIView {
     }
     
     func loadModel(viewModel: EditingContactViewModel) {
+        self.viewModel = viewModel
+    }
+    
+    func loadFieldsFromModel(viewModel: EditingContactViewModel) {
         firstName.text = viewModel.firstName
         lastName.text = viewModel.lastName
         phone.text = viewModel.phone
@@ -216,30 +215,6 @@ extension NewContactView: UIPickerViewDelegate, UIPickerViewDataSource {
         pickedRingtone = ringtones[row]
     }
     
-}
-
-extension NewContactView: UITextViewDelegate {
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if text == "\n" {
-            textView.resignFirstResponder()
-            return false
-        }
-        
-        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        let numberOfChars = newText.count
-        return numberOfChars <= 2000    // Limit Value
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        if textView.contentSize.height >= 200 {
-            textView.isScrollEnabled = true
-        } else {
-            textView.frame.size.height = textView.contentSize.height
-            textView.isScrollEnabled = false 
-        }
-    }
-    
     @objc func keyboardWillShow(notification: NSNotification) {
         guard var userInfo = notification.userInfo else { return }
         guard let keyboard = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue else { return }
@@ -254,6 +229,29 @@ extension NewContactView: UITextViewDelegate {
     @objc func keyboardWillHide(notification: NSNotification) {
         let contentInset: UIEdgeInsets = UIEdgeInsets.zero
         contactScrollView.contentInset = contentInset
+    }
+    
+}
+
+extension NewContactView: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard let viewModel = viewModel else { return false }
+        if viewModel.checkEnter(text) {
+            textView.resignFirstResponder()
+            return false
+        }
+        
+        return viewModel.checkTextForReplacing(textView: textView, range: range, text: text)
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.contentSize.height >= 200 {
+            textView.isScrollEnabled = true
+        } else {
+            textView.frame.size.height = textView.contentSize.height
+            textView.isScrollEnabled = false 
+        }
     }
     
 }

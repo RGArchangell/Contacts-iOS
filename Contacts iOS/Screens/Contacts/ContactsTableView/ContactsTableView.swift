@@ -15,7 +15,7 @@ class ContactsTableView: UIView {
     @IBOutlet private weak var contactsSearch: UISearchBar!
     @IBOutlet private weak var contactsTable: UITableView!
     
-    private var viewModel = ContactsTableViewModel(realmManager: RealmManager())
+    private var viewModel: ContactsTableViewModel?
     private var workItemForSearch: DispatchWorkItem?
     private let cellReuseIdentifier = "ContactCell"
     
@@ -56,12 +56,12 @@ class ContactsTableView: UIView {
     
     func setViewModel(viewModel: ContactsTableViewModel) {
         self.viewModel = viewModel
-        self.viewModel.updateModelData()
+        self.viewModel?.updateModelData()
     }
     
     func reloadTable() {
         contactsTable.reloadData()
-        print("table did reload. num of cells: \(viewModel.names.count)")
+        print("table did reload. num of cells: \(String(describing: viewModel?.names.count))")
     }
     
 }
@@ -71,9 +71,10 @@ extension ContactsTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.endEditing(true)
         
-        let contactInfo = viewModel.tableContactsDictionary[viewModel.contactsSectionTitles[indexPath.section]]
+        guard let sectionTitle = viewModel?.contactsSectionTitles[indexPath.section] else { return }
+        let contactInfo = viewModel?.tableContactsDictionary[sectionTitle]
         let contactID = contactInfo?[indexPath.row].id
-        viewModel.requestContactInfo(contactID: contactID)
+        viewModel?.requestContactInfo(contactID: contactID)
     }
     
 }
@@ -83,7 +84,7 @@ extension ContactsTableView: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.endEditing(true)
         contactsSearch.isLoading = true
-        viewModel.performSearch(searchBar.text) {
+        viewModel?.performSearch(searchBar.text) {
             self.reloadTable()
             self.contactsSearch.isLoading = false
         }
@@ -96,7 +97,7 @@ extension ContactsTableView: UISearchBarDelegate {
         guard let text = searchBar.text else { return }
         
         let workItem = DispatchWorkItem { [weak self] in
-            self?.viewModel.performSearch(text) {
+            self?.viewModel?.performSearch(text) {
                 self?.reloadTable()
                 self?.contactsSearch.isLoading = false
             }

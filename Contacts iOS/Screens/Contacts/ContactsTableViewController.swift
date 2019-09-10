@@ -86,11 +86,11 @@ extension ContactsTableViewController: UITableViewDataSource {
         let id = viewModel.tableContactsDictionary[sectionTitle]?[indexPath.row].id
         viewModel.deleteContactFromDatabase(contactID: id)
         
-        viewModel.deleteFromDictionary(sectionTitle, indexPath.row)
+        //viewModel.deleteFromDictionary(sectionTitle, indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .automatic)
         
         if viewModel.tableContactsDictionary[sectionTitle]?.isEmpty ?? false {
-            viewModel.clearSection(sectionTitle, indexPath)
+            //viewModel.clearSection(sectionTitle, indexPath)
             tableView.reloadData()
         }
     }

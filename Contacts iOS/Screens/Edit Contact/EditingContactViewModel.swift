@@ -11,8 +11,9 @@ import Realm
 import RealmSwift
 import UIKit
 
-class EditingContactViewModel {
+class EditingContactViewModel: NSObject {
     private let realmManager: RealmManager
+    private let numberRegex = NSRegularExpression("^[+|0-9][0-9]{4}[0-9]*")
     private var preloadedContact: Contact?
     private var id: Int
     private var avatarDidChanged = false
@@ -29,6 +30,7 @@ class EditingContactViewModel {
         self.realmManager = realmManager
         self.id = id
         self.type = type
+        super.init()
         
         if type == .edit {
             self.preloadedContact = realmManager.getObjectByID(id, type: Contact.self)
@@ -82,6 +84,34 @@ class EditingContactViewModel {
     func deleteContactFromDatabase() {
         guard let contact = preloadedContact else { return }
         realmManager.deleteObject(objs: contact)
+    }
+    
+    func checkFields(firstName: String?, lastName: String?, phone: String?) -> Bool {
+        if firstName.isEmptyOrNil || lastName.isEmptyOrNil || phone.isEmptyOrNil {
+            return false
+        }
+        
+        guard let number = phone else { return false }
+        let range = NSRange(location: 0, length: number.utf16.count)
+        
+        if numberRegex.firstMatch(in: number, options: [], range: range) == nil {
+            return false
+        }
+        
+        if number.count > 15 { return false }
+        
+        return true
+    }
+    
+    func checkEnter(_ text: String) -> Bool {
+        if text == "\n" { return true }
+        return false
+    }
+    
+    func checkTextForReplacing(textView: UITextView, range: NSRange, text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        let numberOfChars = newText.count
+        return numberOfChars <= 2000    // Limit Value
     }
     
 }
