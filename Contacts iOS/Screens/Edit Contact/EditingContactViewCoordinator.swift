@@ -21,8 +21,7 @@ class EditingContactViewCoordinator: Coordinator {
     
     weak var delegate: EditingContactViewCoordinatorDelegate?
     
-    lazy var newContactViewController = EditingContactViewController(viewModel: newContactViewModel, type: type)
-    lazy var newContactViewModel = EditingContactViewModel(id: id, type: type, realmManager: RealmManager())
+    private var updateCreateButtonEnabledState: ((Bool) -> Void)?
     
     init(rootViewController: RootNavigationController, id: Int, type: EditorType) {
         self.rootViewController = rootViewController
@@ -35,41 +34,40 @@ class EditingContactViewCoordinator: Coordinator {
     }
     
     private func loadScreen() {
+        let newContactViewModel = EditingContactViewModel(id: id, type: type, realmManager: RealmManager())
+        let newContactViewController = EditingContactViewController(viewModel: newContactViewModel, type: type)
         newContactViewController.delegate = self
+        
+        updateCreateButtonEnabledState = { [weak newContactViewController] isEnabled in
+            newContactViewController?.navigationItem.rightBarButtonItem?.isEnabled = isEnabled
+        }
         
         rootViewController.pushViewController(newContactViewController, animated: true)
     }
     
-    private func setNavigationBarPreferences() {
+    private func setNavigationBarPreferences(_ viewController: EditingContactViewController) {
         rootViewController.navigationBar.prefersLargeTitles = false
-        createButtons()
+        viewController.navigationItem.leftBarButtonItem = createCancelButton()
+        viewController.navigationItem.rightBarButtonItem = createDoneButton(viewController)
     }
     
-    private func createButtons() {
-        createCancelButton()
-        createDoneButton()
-    }
-    
-    private func createCancelButton() {
+    private func createCancelButton() -> UIBarButtonItem {
         let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(goBack))
-        newContactViewController.navigationItem.leftBarButtonItem = cancelButton
+        return cancelButton
     }
     
-    private func createDoneButton() {
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(saveContact))
+    private func createDoneButton(_ viewController: EditingContactViewController) -> UIBarButtonItem {
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(saveData(_: viewController)))
         doneButton.isEnabled = false
-        newContactViewController.navigationItem.rightBarButtonItem = doneButton
+        return doneButton
     }
     
     private func coordinatorDidFinish() {
         delegate?.сoordinatorDidFinish(self)
     }
     
-    @objc private func saveContact() {
-        let contact = newContactViewController.getInfoFromFields()
-        newContactViewModel.saveContactData(newContact: contact)
+    @objc private func saveData(_ viewController: EditingContactViewController) {
         
-        goBack()
     }
     
     @objc private func goBack() {
@@ -87,6 +85,10 @@ class EditingContactViewCoordinator: Coordinator {
 
 extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
     
+    func contactSaved() {
+        goBack()
+    }
+    
     func imagePickerView(_ requestedView: UIView) {
         let imagePickerCoordinator = ImagePickerCoordinator(rootViewController: rootViewController, requestedView)
         
@@ -100,15 +102,15 @@ extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
     }
     
     func creatingAvaliable() {
-        newContactViewController.navigationItem.rightBarButtonItem?.isEnabled = true
+        updateCreateButtonEnabledState?(true)
     }
     
     func creatingIsNotAvaliable() {
-        newContactViewController.navigationItem.rightBarButtonItem?.isEnabled = false
+        updateCreateButtonEnabledState?(false)
     }
     
-    func viewWillAppear() {
-        setNavigationBarPreferences()
+    func viewWillAppear(_ viewController: EditingContactViewController) {
+        setNavigationBarPreferences(viewController)
     }
     
 }

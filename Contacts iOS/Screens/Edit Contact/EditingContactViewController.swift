@@ -9,10 +9,11 @@
 import UIKit
 
 protocol EditingContactViewControllerDelegate: class {
-    func viewWillAppear()
+    func viewWillAppear(_ viewController: EditingContactViewController)
     func creatingAvaliable()
     func creatingIsNotAvaliable()
     func contactDeleted()
+    func contactSaved()
     func imagePickerView(_ requestedView: UIView)
 }
 
@@ -44,11 +45,16 @@ class EditingContactViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        delegate?.viewWillAppear()
+        delegate?.viewWillAppear(self)
         newContactView.checkAvaliability()
     }
     
-    func getInfoFromFields() -> NewContact {
+    @objc func saveContact() {
+        let contact = getInfoFromFields()
+        viewModel.saveContactData(newContact: contact)
+    }
+    
+    private func getInfoFromFields() -> NewContact {
         let info = newContactView.getInfoFromFields()
         return info
     }
