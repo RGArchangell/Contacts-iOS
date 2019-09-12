@@ -76,7 +76,6 @@ class NewContactView: UIView {
         firstName.addTarget(lastName, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
         lastName.addTarget(phone, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
         
-        note.text = "-"
         note.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
     }
     
@@ -137,6 +136,11 @@ class NewContactView: UIView {
         note.text = viewModel.notes
         avatar.setImage(viewModel.avatar?.circleMasked, for: .normal)
         
+        if note.text == "-" {
+            note.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        } else {
+            note.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        }
         checkContentSize()
     }
     
@@ -258,7 +262,7 @@ extension NewContactView: UITextViewDelegate {
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        guard textView.textColor == #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1) else { return }
+        guard textView.textColor == #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1) && textView.text == "-" else { return }
         textView.text = ""
         textView.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     }
