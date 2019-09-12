@@ -15,7 +15,7 @@ protocol EditingContactViewCoordinatorDelegate: class {
 
 class EditingContactViewCoordinator: Coordinator {
     
-    private let rootViewController: RootNavigationController
+    private let rootViewController: UINavigationController
     private var id: Int
     private var type: EditorType
     
@@ -23,7 +23,7 @@ class EditingContactViewCoordinator: Coordinator {
     
     private var updateCreateButtonEnabledState: ((Bool) -> Void)?
     
-    init(rootViewController: RootNavigationController, id: Int, type: EditorType) {
+    init(rootViewController: UINavigationController, id: Int, type: EditorType) {
         self.rootViewController = rootViewController
         self.id = id
         self.type = type
@@ -57,17 +57,16 @@ class EditingContactViewCoordinator: Coordinator {
     }
     
     private func createDoneButton(_ viewController: EditingContactViewController) -> UIBarButtonItem {
-        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(saveData(_: viewController)))
+        let doneButton = UIBarButtonItem(title: "Done",
+                                         style: .done,
+                                         target: viewController,
+                                         action: #selector(viewController.saveContact))
         doneButton.isEnabled = false
         return doneButton
     }
     
     private func coordinatorDidFinish() {
         delegate?.сoordinatorDidFinish(self)
-    }
-    
-    @objc private func saveData(_ viewController: EditingContactViewController) {
-        
     }
     
     @objc private func goBack() {

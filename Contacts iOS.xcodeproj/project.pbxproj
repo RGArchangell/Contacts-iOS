@@ -40,7 +40,6 @@
 		84CB71082306C11600A7F07E /* EditorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CB71072306C11600A7F07E /* EditorType.swift */; };
 		84D87F5023054B8B0090A3C2 /* ContactsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D87F4E23054B8B0090A3C2 /* ContactsTableViewCell.swift */; };
 		84D87F5123054B8B0090A3C2 /* ContactsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84D87F4F23054B8B0090A3C2 /* ContactsTableViewCell.xib */; };
-		84D87F5B230566760090A3C2 /* RootNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D87F5A230566760090A3C2 /* RootNavigationController.swift */; };
 		84D87F60230582DB0090A3C2 /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D87F5F230582DB0090A3C2 /* Name.swift */; };
 		84D87F622305861E0090A3C2 /* UISearchBarExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D87F612305861E0090A3C2 /* UISearchBarExtensions.swift */; };
 		84E9BF64230E6932001F8877 /* NewContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E9BF63230E6932001F8877 /* NewContactModel.swift */; };
@@ -86,7 +85,6 @@
 		84CB71072306C11600A7F07E /* EditorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorType.swift; sourceTree = "<group>"; };
 		84D87F4E23054B8B0090A3C2 /* ContactsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsTableViewCell.swift; sourceTree = "<group>"; };
 		84D87F4F23054B8B0090A3C2 /* ContactsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ContactsTableViewCell.xib; sourceTree = "<group>"; };
-		84D87F5A230566760090A3C2 /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationController.swift; sourceTree = "<group>"; };
 		84D87F5F230582DB0090A3C2 /* Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		84D87F612305861E0090A3C2 /* UISearchBarExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISearchBarExtensions.swift; sourceTree = "<group>"; };
 		84E9BF63230E6932001F8877 /* NewContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewContactModel.swift; sourceTree = "<group>"; };
@@ -233,14 +231,6 @@
 			path = ContactsTableViewCell;
 			sourceTree = "<group>";
 		};
-		84D87F5C230567110090A3C2 /* RootNavigationController */ = {
-			isa = PBXGroup;
-			children = (
-				84D87F5A230566760090A3C2 /* RootNavigationController.swift */,
-			);
-			path = RootNavigationController;
-			sourceTree = "<group>";
-		};
 		84E9BF5E230D18DC001F8877 /* Contacts */ = {
 			isa = PBXGroup;
 			children = (
@@ -284,7 +274,6 @@
 			children = (
 				84C083A022FD2B0C0092B73C /* Coordinator.swift */,
 				84C083A222FD2B4B0092B73C /* MainCoordinator.swift */,
-				84D87F5C230567110090A3C2 /* RootNavigationController */,
 			);
 			path = "Main UI";
 			sourceTree = "<group>";
@@ -475,7 +464,6 @@
 				84D87F60230582DB0090A3C2 /* Name.swift in Sources */,
 				8472A4CD2309B00900972B88 /* OptionalExtensions.swift in Sources */,
 				848A1F6E23016CC2009CEC68 /* UIImageExtensions.swift in Sources */,
-				84D87F5B230566760090A3C2 /* RootNavigationController.swift in Sources */,
 				84E9BF64230E6932001F8877 /* NewContactModel.swift in Sources */,
 				843FFF742303E0A3009AB2B1 /* ImagePickerCoordinator.swift in Sources */,
 				84C083A322FD2B4C0092B73C /* MainCoordinator.swift in Sources */,

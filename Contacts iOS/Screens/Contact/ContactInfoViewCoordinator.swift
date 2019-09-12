@@ -15,7 +15,7 @@ protocol ContactInfoViewCoordinatorDelegate: class {
 
 class ContactInfoViewCoordinator: Coordinator {
     
-    private let rootViewController: RootNavigationController
+    private let rootViewController: UINavigationController
     private var contactID: Int
     
     weak var delegate: ContactInfoViewCoordinatorDelegate?
@@ -23,7 +23,7 @@ class ContactInfoViewCoordinator: Coordinator {
     //lazy var contactInfoViewController = ContactInfoViewController(viewModel: contactInfoViewModel)
     //lazy var contactInfoViewModel = ContactInfoViewModel(contactID: contactID, realmManager: RealmManager())
     
-    init(rootViewController: RootNavigationController, _ contactID: Int) {
+    init(rootViewController: UINavigationController, _ contactID: Int) {
         self.rootViewController = rootViewController
         self.contactID = contactID
     }

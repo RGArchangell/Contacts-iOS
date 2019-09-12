@@ -75,6 +75,9 @@ class NewContactView: UIView {
                                                object: nil)
         firstName.addTarget(lastName, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
         lastName.addTarget(phone, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
+        
+        note.text = "-"
+        note.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
     }
     
     private func checkMainFields() -> Bool {
@@ -252,6 +255,18 @@ extension NewContactView: UITextViewDelegate {
             textView.frame.size.height = textView.contentSize.height
             textView.isScrollEnabled = false 
         }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        guard textView.textColor == #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1) else { return }
+        textView.text = ""
+        textView.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        guard textView.text.isEmpty else { return }
+        textView.text = "-"
+        textView.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
     }
     
 }

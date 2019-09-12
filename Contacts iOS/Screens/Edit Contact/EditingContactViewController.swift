@@ -52,6 +52,7 @@ class EditingContactViewController: UIViewController {
     @objc func saveContact() {
         let contact = getInfoFromFields()
         viewModel.saveContactData(newContact: contact)
+        delegate?.contactSaved()
     }
     
     private func getInfoFromFields() -> NewContact {

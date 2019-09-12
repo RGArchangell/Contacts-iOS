@@ -11,11 +11,11 @@ import UIKit
 
 class ContactsTableViewCoordinator: Coordinator {
     
-    private let rootViewController: RootNavigationController
+    private let rootViewController: UINavigationController
     lazy var contactsTableViewController = ContactsTableViewController(viewModel: contactsTableViewModel)
     lazy var contactsTableViewModel = ContactsTableViewModel(realmManager: RealmManager())
     
-    init(rootViewController: RootNavigationController) {
+    init(rootViewController: UINavigationController) {
         self.rootViewController = rootViewController
     }
     

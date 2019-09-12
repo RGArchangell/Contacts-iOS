@@ -11,11 +11,11 @@ import UIKit
 
 class MainCoordinator: Coordinator {
     var window: UIWindow?
-    private var rootViewController: RootNavigationController
+    private var rootViewController: UINavigationController
     
     required init(window: UIWindow) {
         self.window = window
-        let rootNavigationController = RootNavigationController()
+        let rootNavigationController = UINavigationController()
         
         window.rootViewController = rootNavigationController
         window.makeKeyAndVisible()

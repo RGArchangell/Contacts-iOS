@@ -15,12 +15,12 @@ protocol ImagePickerCoordinatorDelegate: class {
 
 class ImagePickerCoordinator: Coordinator {
     
-    private let rootViewController: RootNavigationController
+    private let rootViewController: UINavigationController
     
     weak var delegate: ImagePickerCoordinatorDelegate?
     weak var requestedView: NewContactView?
     
-    init(rootViewController: RootNavigationController, _ requestedView: UIView) {
+    init(rootViewController: UINavigationController, _ requestedView: UIView) {
         self.rootViewController = rootViewController
         self.requestedView = requestedView as? NewContactView
     }
@@ -39,7 +39,7 @@ class ImagePickerCoordinator: Coordinator {
         actionSheet.addAction(UIAlertAction(title: "Take Photo",
                                             style: UIAlertAction.Style.default) { (_: UIAlertAction) -> Void in
                                                 imagePicker.sourceType = UIImagePickerController.SourceType.camera
-                                                imagePicker.delegate = self.rootViewController
+                                                imagePicker.delegate = self
                                                 self.rootViewController.present(imagePicker, animated: true, completion: nil)
         })
         
@@ -47,22 +47,35 @@ class ImagePickerCoordinator: Coordinator {
                                             style: UIAlertAction.Style.default) { (_: UIAlertAction) -> Void in
                                                 
                                                 imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
-                                                imagePicker.delegate = self.rootViewController
+                                                imagePicker.delegate = self
                                                 self.rootViewController.present(imagePicker, animated: true, completion: nil)
         })
         
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        rootViewController.imagePickerDelegate = self
         rootViewController.present(actionSheet, animated: true, completion: nil)
     }
     
 }
 
-extension ImagePickerCoordinator: RootNavigationControllerDelegate {
+extension ImagePickerCoordinator: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    func avatarImageHasUpdated(_ newImage: UIImage) {
-        requestedView?.avatarImageHasUpdated(newImage)
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        print("image picked")
+        
+        guard let pickedImage = info[.originalImage] as? UIImage else {
+            picker.dismiss(animated: true, completion: nil)
+            return
+        }
+        
+        guard let image = pickedImage.circleMasked else {
+            picker.dismiss(animated: true, completion: nil)
+            return
+        }
+        
+        requestedView?.avatarImageHasUpdated(image)
+        picker.dismiss(animated: true, completion: nil)
         delegate?.сoordinatorDidFinish(self)
     }
     

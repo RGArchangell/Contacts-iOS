@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Coordinator {
+class Coordinator: NSObject {
     
     private(set) var childCoordinators: [Coordinator] = []
     
@@ -40,10 +40,4 @@ class Coordinator {
         childCoordinators.removeAll()
     }
     
-}
-
-extension Coordinator: Equatable {
-    static func == (lhs: Coordinator, rhs: Coordinator) -> Bool {
-        return lhs === rhs
-    }
 }
