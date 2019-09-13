@@ -11,12 +11,12 @@ import UIKit
 
 class ContactsTableViewCell: UITableViewCell {
     
-    @IBOutlet private weak var firstName: UILabel!
-    @IBOutlet private weak var lastName: UILabel!
+    @IBOutlet private weak var firstNameLabel: UILabel!
+    @IBOutlet private weak var lastNameLabel: UILabel!
     
     func loadNames(firstName: String, lastName: String) {
-        self.firstName.text = firstName
-        self.lastName.text = lastName
+        self.firstNameLabel.text = firstName
+        self.lastNameLabel.text = lastName
     }
     
     override func awakeFromNib() {

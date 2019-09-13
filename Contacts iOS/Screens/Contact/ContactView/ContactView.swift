@@ -16,11 +16,11 @@ protocol ContactViewDelegate: class {
 class ContactView: UIView {
     
     @IBOutlet private var contentView: UIView!
-    @IBOutlet private weak var avatar: UIImageView!
-    @IBOutlet private weak var name: UILabel!
-    @IBOutlet private weak var phone: UIButton!
-    @IBOutlet private weak var ringtone: UILabel!
-    @IBOutlet private weak var note: UITextView!
+    @IBOutlet private weak var avatarImageView: UIImageView!
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var phoneButton: UIButton!
+    @IBOutlet private weak var ringtoneLabel: UILabel!
+    @IBOutlet private weak var noteTextView: UITextView!
     
     weak var delegate: ContactViewDelegate?
     
@@ -42,25 +42,25 @@ class ContactView: UIView {
     }
     
     private func checkContentSize() {
-        if note.contentSize.height >= 200 {
-            note.isScrollEnabled = true
+        if noteTextView.contentSize.height >= 200 {
+            noteTextView.isScrollEnabled = true
         } else {
-            note.frame.size.height = note.contentSize.height
-            note.isScrollEnabled = false
+            noteTextView.frame.size.height = noteTextView.contentSize.height
+            noteTextView.isScrollEnabled = false
         }
     }
     
     func loadModel(viewModel: ContactInfoViewModel) {
-        name.text = viewModel.name
-        phone.setTitle(viewModel.phone, for: .normal)
-        ringtone.text = viewModel.ringtone
-        note.text = viewModel.notes
-        avatar.image = viewModel.avatar?.circleMasked
+        nameLabel.text = viewModel.name
+        phoneButton.setTitle(viewModel.phone, for: .normal)
+        ringtoneLabel.text = viewModel.ringtone
+        noteTextView.text = viewModel.notes
+        avatarImageView.image = viewModel.avatar?.circleMasked
         checkContentSize()
     }
 
     @IBAction private func phoneButtonTouched(_ sender: UIButton) {
-        guard let phoneNumber = phone.title(for: .normal) else { return }
+        guard let phoneNumber = phoneButton.title(for: .normal) else { return }
         delegate?.phoneCallInitiated(phoneNumber)
     }
     

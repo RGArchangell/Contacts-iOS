@@ -19,10 +19,7 @@ class ContactInfoViewCoordinator: Coordinator {
     private var contactID: Int
     
     weak var delegate: ContactInfoViewCoordinatorDelegate?
-    
-    //lazy var contactInfoViewController = ContactInfoViewController(viewModel: contactInfoViewModel)
-    //lazy var contactInfoViewModel = ContactInfoViewModel(contactID: contactID, realmManager: RealmManager())
-    
+
     init(rootViewController: UINavigationController, _ contactID: Int) {
         self.rootViewController = rootViewController
         self.contactID = contactID

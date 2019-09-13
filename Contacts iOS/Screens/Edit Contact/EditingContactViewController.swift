@@ -26,6 +26,8 @@ class EditingContactViewController: UIViewController {
             if type == .edit {
                 newContactView.loadFieldsFromModel(viewModel: viewModel)
                 newContactView.showDeleteField()
+            } else {
+                newContactView.setNotePlaceholder()
             }
         }
     }

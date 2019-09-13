@@ -12,8 +12,8 @@ import UIKit
 class ContactsTableView: UIView {
     
     @IBOutlet private var contentView: UIView!
-    @IBOutlet private weak var contactsSearch: UISearchBar!
-    @IBOutlet private weak var contactsTable: UITableView!
+    @IBOutlet private weak var contactsSearchBar: UISearchBar!
+    @IBOutlet private weak var contactsTableView: UITableView!
     
     private var viewModel: ContactsTableViewModel?
     private var workItemForSearch: DispatchWorkItem?
@@ -42,16 +42,16 @@ class ContactsTableView: UIView {
     
     private func setTableViewPreferences() {
         let tableCell = UINib(nibName: "ContactsTableViewCell", bundle: nil)
-        contactsTable.register(tableCell, forCellReuseIdentifier: cellReuseIdentifier)
-        contactsTable.delegate = self
+        contactsTableView.register(tableCell, forCellReuseIdentifier: cellReuseIdentifier)
+        contactsTableView.delegate = self
     }
     
     private func setSearchBarPreferences() {
-        contactsSearch.delegate = self
+        contactsSearchBar.delegate = self
     }
     
     func setTableViewDataSource(viewController: ContactsTableViewController) {
-        contactsTable.dataSource = viewController
+        contactsTableView.dataSource = viewController
     }
     
     func setViewModel(viewModel: ContactsTableViewModel) {
@@ -60,7 +60,7 @@ class ContactsTableView: UIView {
     }
     
     func reloadTable() {
-        contactsTable.reloadData()
+        contactsTableView.reloadData()
         print("table did reload. num of cells: \(String(describing: viewModel?.names.count))")
     }
     
@@ -83,15 +83,15 @@ extension ContactsTableView: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.endEditing(true)
-        contactsSearch.isLoading = true
+        contactsSearchBar.isLoading = true
         viewModel?.performSearch(searchBar.text) {
             self.reloadTable()
-            self.contactsSearch.isLoading = false
+            self.contactsSearchBar.isLoading = false
         }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        contactsSearch.isLoading = true
+        contactsSearchBar.isLoading = true
         self.workItemForSearch?.cancel()
         
         guard let text = searchBar.text else { return }
@@ -99,7 +99,7 @@ extension ContactsTableView: UISearchBarDelegate {
         let workItem = DispatchWorkItem { [weak self] in
             self?.viewModel?.performSearch(text) {
                 self?.reloadTable()
-                self?.contactsSearch.isLoading = false
+                self?.contactsSearchBar.isLoading = false
             }
         }
         
@@ -113,17 +113,17 @@ extension ContactsTableView: UISearchBarDelegate {
 extension ContactsTableView {
     
     private func setSearchBarShadow() {
-        contactsSearch.layer.shadowColor = UIColor.darkGray.cgColor
-        contactsSearch.layer.shadowOffset = .zero
-        contactsSearch.layer.shadowOpacity = 1
-        contactsSearch.layer.shadowRadius = 1
+        contactsSearchBar.layer.shadowColor = UIColor.darkGray.cgColor
+        contactsSearchBar.layer.shadowOffset = .zero
+        contactsSearchBar.layer.shadowOpacity = 1
+        contactsSearchBar.layer.shadowRadius = 1
         
         let rectangle = CGRect(x: 0,
-                               y: contactsSearch.frame.height,
+                               y: contactsSearchBar.frame.height,
                                width: self.frame.width,
                                height: 1)
         
-        contactsSearch.layer.shadowPath = UIBezierPath(rect: rectangle).cgPath
+        contactsSearchBar.layer.shadowPath = UIBezierPath(rect: rectangle).cgPath
     }
     
 }

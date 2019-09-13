@@ -9,7 +9,8 @@
 import UIKit
 
 protocol ContactsTableViewControllerDelegate: class {
-    func viewWillAppear()
+    func viewWillAppear(sender: ContactsTableViewController)
+    func didRequestGoToAddScreen(newContactID: Int)
 }
 
 class ContactsTableViewController: UIViewController {
@@ -32,7 +33,7 @@ class ContactsTableViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         viewModel.loadContacts()
         contactsTableView.setTableViewDataSource(viewController: self)
-        delegate?.viewWillAppear()
+        delegate?.viewWillAppear(sender: self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -40,6 +41,11 @@ class ContactsTableViewController: UIViewController {
             self.contactsTableView.setViewModel(viewModel: self.viewModel)
             self.contactsTableView.reloadTable()
         }
+    }
+    
+    @objc func requestGoToAddScreen() {
+        let id = viewModel.getNewId()
+        delegate?.didRequestGoToAddScreen(newContactID: id)
     }
     
 }
@@ -84,13 +90,13 @@ extension ContactsTableViewController: UITableViewDataSource {
         
         let sectionTitle = viewModel.contactsSectionTitles[indexPath.section]
         let id = viewModel.tableContactsDictionary[sectionTitle]?[indexPath.row].id
+        
+        viewModel.deleteFromDictionary(sectionTitle, indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
         viewModel.deleteContactFromDatabase(contactID: id)
         
-        //viewModel.deleteFromDictionary(sectionTitle, indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        
         if viewModel.tableContactsDictionary[sectionTitle]?.isEmpty ?? false {
-            //viewModel.clearSection(sectionTitle, indexPath)
+            viewModel.clearSection(sectionTitle, indexPath)
             tableView.reloadData()
         }
     }

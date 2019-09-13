@@ -28,16 +28,16 @@ protocol NewContactViewDelegate: class {
 class NewContactView: UIView {
     
     @IBOutlet private var contentView: UIView!
-    @IBOutlet private weak var firstName: UITextField!
-    @IBOutlet private weak var lastName: UITextField!
-    @IBOutlet private weak var avatar: UIButton!
-    @IBOutlet private weak var phone: UITextField!
-    @IBOutlet private weak var ringtone: UIButton!
-    @IBOutlet private weak var note: UITextView! {
-        didSet { note.delegate = self }
+    @IBOutlet private weak var firstNameTextField: UITextField!
+    @IBOutlet private weak var lastNameTextField: UITextField!
+    @IBOutlet private weak var avatarButton: UIButton!
+    @IBOutlet private weak var phoneTextField: UITextField!
+    @IBOutlet private weak var ringtoneButton: UIButton!
+    @IBOutlet private weak var noteTextView: UITextView! {
+        didSet { noteTextView.delegate = self }
     }
-    @IBOutlet private weak var deleteField: UIStackView! {
-        didSet { deleteField.isHidden = true }
+    @IBOutlet private weak var deleteFieldStackView: UIStackView! {
+        didSet { deleteFieldStackView.isHidden = true }
     }
     @IBOutlet private weak var contactScrollView: UIScrollView!
     
@@ -64,7 +64,11 @@ class NewContactView: UIView {
         contentView.frame = bounds
         addSubview(contentView)
         
-        addInputAccessoryForTextFields(textFields: [phone], nextTextField: note, dismissable: false, previousNextable: true)
+        addInputAccessoryForTextFields(textFields: [phoneTextField],
+                                       nextTextField: noteTextView,
+                                       dismissable: false,
+                                       previousNextable: true)
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification,
@@ -73,16 +77,15 @@ class NewContactView: UIView {
                                                selector: #selector(keyboardWillHide),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
-        firstName.addTarget(lastName, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
-        lastName.addTarget(phone, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
         
-        note.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+        firstNameTextField.addTarget(lastNameTextField, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
+        lastNameTextField.addTarget(phoneTextField, action: #selector(becomeFirstResponder), for: .editingDidEndOnExit)
     }
     
     private func checkMainFields() -> Bool {
-        let firstNameText = firstName.text
-        let lastNameText = lastName.text
-        let phoneText = phone.text
+        let firstNameText = firstNameTextField.text
+        let lastNameText = lastNameTextField.text
+        let phoneText = phoneTextField.text
         
         guard let result = viewModel?.checkFields(firstName: firstNameText,
                                                   lastName: lastNameText,
@@ -92,11 +95,11 @@ class NewContactView: UIView {
     }
     
     private func checkContentSize() {
-        if note.contentSize.height >= 200 {
-            note.isScrollEnabled = true
+        if noteTextView.contentSize.height >= 200 {
+            noteTextView.isScrollEnabled = true
         } else {
-            note.frame.size.height = note.contentSize.height
-            note.isScrollEnabled = false
+            noteTextView.frame.size.height = noteTextView.contentSize.height
+            noteTextView.isScrollEnabled = false
         }
     }
     
@@ -108,18 +111,23 @@ class NewContactView: UIView {
         }
     }
     
+    func setNotePlaceholder() {
+        noteTextView.text = "-"
+        noteTextView.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+    }
+    
     func getInfoFromFields() -> NewContact {
         
-        var notes = note.text
-        if note.text.isEmptyOrNil { notes = "-" }
+        var notes = noteTextView.text
+        if noteTextView.text.isEmptyOrNil { notes = "-" }
         
         let contact = NewContact(
-            firstName: firstName.text ?? "",
-            lastName: lastName.text ?? "",
-            phone: phone.text ?? "",
-            ringtone: ringtone.titleLabel?.text ?? "",
+            firstName: firstNameTextField.text ?? "",
+            lastName: lastNameTextField.text ?? "",
+            phone: phoneTextField.text ?? "",
+            ringtone: pickedRingtone,
             notes: notes ?? "",
-            avatar: avatar.image(for: .normal) ?? UIImage())
+            avatar: avatarButton.image(for: .normal) ?? UIImage())
         
         return contact
     }
@@ -129,28 +137,24 @@ class NewContactView: UIView {
     }
     
     func loadFieldsFromModel(viewModel: EditingContactViewModel) {
-        firstName.text = viewModel.firstName
-        lastName.text = viewModel.lastName
-        phone.text = viewModel.phone
-        ringtone.setTitle(viewModel.ringtone, for: .normal)
-        note.text = viewModel.notes
-        avatar.setImage(viewModel.avatar?.circleMasked, for: .normal)
+        firstNameTextField.text = viewModel.firstName
+        lastNameTextField.text = viewModel.lastName
+        phoneTextField.text = viewModel.phone
+        ringtoneButton.setTitle(viewModel.ringtone, for: .normal)
+        noteTextView.text = viewModel.notes
+        avatarButton.setImage(viewModel.avatar?.circleMasked, for: .normal)
         
-        if note.text == "-" {
-            note.textColor = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
-        } else {
-            note.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        }
+        if noteTextView.text == "-" { setNotePlaceholder() }
         checkContentSize()
     }
     
     func showDeleteField() {
-        deleteField.isHidden = false
+        deleteFieldStackView.isHidden = false
     }
     
     func avatarImageHasUpdated(_ newImage: UIImage) {
-        self.avatar.contentMode = .scaleToFill
-        self.avatar.setImage(newImage, for: .normal)
+        self.avatarButton.contentMode = .scaleToFill
+        self.avatarButton.setImage(newImage, for: .normal)
         delegate?.imageHasUpdated()
     }
     
@@ -201,7 +205,7 @@ extension NewContactView: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     @objc func onDoneButtonTapped() {
-        ringtone.titleLabel?.text = pickedRingtone
+        ringtoneButton.setTitle(pickedRingtone, for: .normal)
         toolBar.removeFromSuperview()
         picker.removeFromSuperview()
     }

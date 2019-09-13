@@ -16,7 +16,7 @@ protocol EditingContactViewCoordinatorDelegate: class {
 class EditingContactViewCoordinator: Coordinator {
     
     private let rootViewController: UINavigationController
-    private var id: Int
+    private var contactId: Int
     private var type: EditorType
     
     weak var delegate: EditingContactViewCoordinatorDelegate?
@@ -25,7 +25,7 @@ class EditingContactViewCoordinator: Coordinator {
     
     init(rootViewController: UINavigationController, id: Int, type: EditorType) {
         self.rootViewController = rootViewController
-        self.id = id
+        self.contactId = id
         self.type = type
     }
     
@@ -34,7 +34,7 @@ class EditingContactViewCoordinator: Coordinator {
     }
     
     private func loadScreen() {
-        let newContactViewModel = EditingContactViewModel(id: id, type: type, realmManager: RealmManager())
+        let newContactViewModel = EditingContactViewModel(id: contactId, type: type, realmManager: RealmManager())
         let newContactViewController = EditingContactViewController(viewModel: newContactViewModel, type: type)
         newContactViewController.delegate = self
         
