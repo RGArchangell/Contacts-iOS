@@ -62,9 +62,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "70"
-            endingLineNumber = "70"
-            landmarkName = "callNumber(phoneNumber:)"
-            landmarkType = "9">
+            endingLineNumber = "70">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -74,7 +72,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contacts iOS/Screens/Edit Contact/EditingContactViewController.swift"
-            timestampString = "590043711.761538"
+            timestampString = "590580725.970185"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "51"
@@ -90,11 +88,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contacts iOS/Screens/Edit Contact/EditingContactViewController.swift"
-            timestampString = "590043711.761626"
+            timestampString = "590580725.970572"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
             landmarkName = "saveContact()"
             landmarkType = "7">
          </BreakpointContent>
@@ -122,7 +120,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contacts iOS/Screens/Contacts/ContactsTableViewCoordinator.swift"
-            timestampString = "590043711.7617151"
+            timestampString = "590477879.810546"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "68"
@@ -143,7 +141,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "37"
             endingLineNumber = "37"
-            landmarkName = "setNavigationBarPreferences(_:)"
+            landmarkName = "loadScreen()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -154,7 +152,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contacts iOS/Screens/Contact/ContactInfoViewModel.swift"
-            timestampString = "589982457.842505"
+            timestampString = "590477879.810621"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "39"
@@ -170,7 +168,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contacts iOS/Screens/Contacts/ContactsTableViewCoordinator.swift"
-            timestampString = "590043711.761813"
+            timestampString = "590477879.81066"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "67"

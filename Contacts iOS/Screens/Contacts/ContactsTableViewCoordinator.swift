@@ -28,7 +28,7 @@ class ContactsTableViewCoordinator: Coordinator {
     }
     
     private func setNavigationBarPreferences(viewController: ContactsTableViewController) {
-        rootViewController.navigationBar.topItem?.title = "Contacts"
+        viewController.navigationItem.title = "Contacts"
         rootViewController.navigationBar.prefersLargeTitles = true
         rootViewController.navigationItem.largeTitleDisplayMode = .never
         rootViewController.view.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)

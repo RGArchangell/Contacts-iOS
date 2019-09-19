@@ -35,12 +35,8 @@ class ContactInfoViewModel {
         self.ringtone = loadedContact.ringtone
         self.notes = loadedContact.notes
         
-        let avatar = getImage(imageName: "\(loadedContact.id)_avatar.jpg")
+        let avatar = FileManager.default.getImage(imageName: "\(loadedContact.id)_avatar.jpg")
         self.avatar = avatar
-    }
-    
-    func requestCall(_ phone: String) {
-        callNumber(phoneNumber: phone)
     }
     
 }

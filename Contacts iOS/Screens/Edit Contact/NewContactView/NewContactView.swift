@@ -18,7 +18,7 @@ private let ringtones = ["Default",
                          "Lose Yourself"]
 
 protocol NewContactViewDelegate: class {
-    func didRequestImagePicker(_ requestedView: UIView)
+    func didRequestImagePicker()
     func imageHasUpdated()
     func createIsAvaliable()
     func createIsNotAvaliable()
@@ -165,7 +165,7 @@ class NewContactView: UIView {
     
     @IBAction private func changeAvatarInitiated(_ sender: UIButton) {
         self.endEditing(true)
-        delegate?.didRequestImagePicker(self)
+        delegate?.didRequestImagePicker()
     }
     
     @IBAction private func fieldsEditingChanged(_ sender: UITextField) {

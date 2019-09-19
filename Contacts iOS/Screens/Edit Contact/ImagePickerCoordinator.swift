@@ -11,6 +11,7 @@ import UIKit
 
 protocol ImagePickerCoordinatorDelegate: class {
     func сoordinatorDidFinish(_ сoordinator: Coordinator)
+    func imagePicked(image: UIImage)
 }
 
 class ImagePickerCoordinator: Coordinator {
@@ -18,11 +19,9 @@ class ImagePickerCoordinator: Coordinator {
     private let rootViewController: UINavigationController
     
     weak var delegate: ImagePickerCoordinatorDelegate?
-    weak var requestedView: NewContactView?
     
-    init(rootViewController: UINavigationController, _ requestedView: UIView) {
+    init(rootViewController: UINavigationController) {
         self.rootViewController = rootViewController
-        self.requestedView = requestedView as? NewContactView
     }
     
     override func start() {
@@ -74,7 +73,7 @@ extension ImagePickerCoordinator: UIImagePickerControllerDelegate, UINavigationC
             return
         }
         
-        requestedView?.avatarImageHasUpdated(image)
+        delegate?.imagePicked(image: image)
         picker.dismiss(animated: true, completion: nil)
         delegate?.сoordinatorDidFinish(self)
     }

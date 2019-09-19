@@ -18,10 +18,10 @@ class EditingContactViewCoordinator: Coordinator {
     private let rootViewController: UINavigationController
     private var contactId: Int
     private var type: EditorType
+    private var onSelectedImageUpdated: ((UIImage) -> Void)?
+    private var updateCreateButtonEnabledState: ((Bool) -> Void)?
     
     weak var delegate: EditingContactViewCoordinatorDelegate?
-    
-    private var updateCreateButtonEnabledState: ((Bool) -> Void)?
     
     init(rootViewController: UINavigationController, id: Int, type: EditorType) {
         self.rootViewController = rootViewController
@@ -40,6 +40,10 @@ class EditingContactViewCoordinator: Coordinator {
         
         updateCreateButtonEnabledState = { [weak newContactViewController] isEnabled in
             newContactViewController?.navigationItem.rightBarButtonItem?.isEnabled = isEnabled
+        }
+        
+        onSelectedImageUpdated = { [weak newContactViewController] image in
+            newContactViewController?.handleImageUpdated(image: image)
         }
         
         rootViewController.pushViewController(newContactViewController, animated: true)
@@ -75,8 +79,7 @@ class EditingContactViewCoordinator: Coordinator {
     }
     
     private func goBackAfterDeletion() {
-        rootViewController.popViewController(animated: false)
-        rootViewController.popViewController(animated: false)
+        rootViewController.popToRootViewController(animated: true)
         coordinatorDidFinish()
     }
     
@@ -88,8 +91,8 @@ extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
         goBack()
     }
     
-    func imagePickerView(_ requestedView: UIView) {
-        let imagePickerCoordinator = ImagePickerCoordinator(rootViewController: rootViewController, requestedView)
+    func imagePickerView() {
+        let imagePickerCoordinator = ImagePickerCoordinator(rootViewController: rootViewController)
         
         imagePickerCoordinator.delegate = self
         addChildCoordinator(imagePickerCoordinator)
@@ -115,6 +118,10 @@ extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
 }
 
 extension EditingContactViewCoordinator: ImagePickerCoordinatorDelegate {
+    
+    func imagePicked(image: UIImage) {
+        onSelectedImageUpdated?(image)
+    }
     
     func сoordinatorDidFinish(_ сoordinator: Coordinator) {
         self.removeChildCoordinator(сoordinator)

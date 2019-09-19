@@ -14,7 +14,7 @@ protocol EditingContactViewControllerDelegate: class {
     func creatingIsNotAvaliable()
     func contactDeleted()
     func contactSaved()
-    func imagePickerView(_ requestedView: UIView)
+    func imagePickerView()
 }
 
 class EditingContactViewController: UIViewController {
@@ -51,6 +51,10 @@ class EditingContactViewController: UIViewController {
         newContactView.checkAvaliability()
     }
     
+    func handleImageUpdated(image: UIImage) {
+        newContactView.avatarImageHasUpdated(image)
+    }
+    
     @objc func saveContact() {
         let contact = getInfoFromFields()
         viewModel.saveContactData(newContact: contact)
@@ -79,8 +83,8 @@ extension EditingContactViewController: NewContactViewDelegate {
         delegate?.creatingIsNotAvaliable()
     }
     
-    func didRequestImagePicker(_ requestedView: UIView) {
-        delegate?.imagePickerView(requestedView)
+    func didRequestImagePicker() {
+        delegate?.imagePickerView()
     }
     
     func imageHasUpdated() {

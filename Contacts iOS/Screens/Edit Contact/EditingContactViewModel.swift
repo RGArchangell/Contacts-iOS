@@ -46,7 +46,7 @@ class EditingContactViewModel: NSObject {
         self.phone = preloadedContact?.phone
         self.ringtone = preloadedContact?.ringtone
         self.notes = preloadedContact?.notes
-        self.avatar = getImage(imageName: avatarName)
+        self.avatar = FileManager.default.getImage(imageName: avatarName)
     }
     
     func saveContactData(newContact: NewContact) {
@@ -65,13 +65,13 @@ class EditingContactViewModel: NSObject {
         
         switch type {
         case .new:
-            saveImageDocumentDirectory(avatar, name: imageName)
+            FileManager.default.saveImageDocumentDirectory(avatar, name: imageName)
             realmManager.saveObjects(objs: contact)
             
         case .edit:
             if avatarDidChanged {
-                removeImage(imageName: imageName)
-                saveImageDocumentDirectory(avatar, name: imageName)
+                FileManager.default.removeImage(imageName: imageName)
+                FileManager.default.saveImageDocumentDirectory(avatar, name: imageName)
             }
             realmManager.editObjects(objs: contact)
         }

@@ -41,7 +41,7 @@ class ContactInfoViewController: UIViewController {
 extension ContactInfoViewController: ContactViewDelegate {
     
     func phoneCallInitiated(_ phone: String) {
-        viewModel.requestCall(phone)
+        self.callNumber(phoneNumber: phone)
     }
     
 }
