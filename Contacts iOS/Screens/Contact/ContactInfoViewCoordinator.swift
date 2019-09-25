@@ -61,8 +61,8 @@ class ContactInfoViewCoordinator: Coordinator {
 
 extension ContactInfoViewCoordinator: ContactInfoViewControllerDelegate {
     
-    func viewWillAppear(_ sender: ContactInfoViewController) {
-        setNavigationBarPreferences(sender)
+    func viewWillAppear(_ viewController: ContactInfoViewController) {
+        setNavigationBarPreferences(viewController)
     }
     
 }

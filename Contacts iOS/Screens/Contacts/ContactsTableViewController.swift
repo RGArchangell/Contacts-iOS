@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ContactsTableViewControllerDelegate: class {
-    func viewWillAppear(sender: ContactsTableViewController)
+    func viewWillAppear(_ viewController: ContactsTableViewController)
     func didRequestGoToAddScreen(newContactID: Int)
 }
 
@@ -33,7 +33,7 @@ class ContactsTableViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         viewModel.loadContacts()
         contactsTableView.setTableViewDataSource(viewController: self)
-        delegate?.viewWillAppear(sender: self)
+        delegate?.viewWillAppear(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {

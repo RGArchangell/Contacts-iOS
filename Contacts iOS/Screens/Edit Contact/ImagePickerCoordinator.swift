@@ -11,7 +11,7 @@ import UIKit
 
 protocol ImagePickerCoordinatorDelegate: class {
     func сoordinatorDidFinish(_ сoordinator: Coordinator)
-    func imagePicked(image: UIImage)
+    func imagePicked(_ coordinator: ImagePickerCoordinator, image: UIImage)
 }
 
 class ImagePickerCoordinator: Coordinator {
@@ -73,7 +73,7 @@ extension ImagePickerCoordinator: UIImagePickerControllerDelegate, UINavigationC
             return
         }
         
-        delegate?.imagePicked(image: image)
+        delegate?.imagePicked(self, image: image)
         picker.dismiss(animated: true, completion: nil)
         delegate?.сoordinatorDidFinish(self)
     }

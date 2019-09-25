@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ContactInfoViewControllerDelegate: class {
-    func viewWillAppear(_ sender: ContactInfoViewController)
+    func viewWillAppear(_ viewController: ContactInfoViewController)
 }
 
 class ContactInfoViewController: UIViewController {
@@ -40,7 +40,7 @@ class ContactInfoViewController: UIViewController {
 
 extension ContactInfoViewController: ContactViewDelegate {
     
-    func phoneCallInitiated(_ phone: String) {
+    func phoneCallInitiated(_ view: ContactView, _ phone: String) {
         self.callNumber(phoneNumber: phone)
     }
     

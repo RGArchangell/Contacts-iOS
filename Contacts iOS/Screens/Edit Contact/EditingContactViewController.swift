@@ -10,11 +10,11 @@ import UIKit
 
 protocol EditingContactViewControllerDelegate: class {
     func viewWillAppear(_ viewController: EditingContactViewController)
-    func creatingAvaliable()
-    func creatingIsNotAvaliable()
-    func contactDeleted()
-    func contactSaved()
-    func imagePickerView()
+    func creatingAvaliable(_ viewController: EditingContactViewController)
+    func creatingIsNotAvaliable(_ viewController: EditingContactViewController)
+    func contactDeleted(_ viewController: EditingContactViewController)
+    func contactSaved(_ viewController: EditingContactViewController)
+    func imagePickerView(_ viewController: EditingContactViewController)
 }
 
 class EditingContactViewController: UIViewController {
@@ -58,7 +58,7 @@ class EditingContactViewController: UIViewController {
     @objc func saveContact() {
         let contact = getInfoFromFields()
         viewModel.saveContactData(newContact: contact)
-        delegate?.contactSaved()
+        delegate?.contactSaved(self)
     }
     
     private func getInfoFromFields() -> NewContact {
@@ -70,24 +70,24 @@ class EditingContactViewController: UIViewController {
 
 extension EditingContactViewController: NewContactViewDelegate {
     
-    func deleteRequested() {
+    func deleteRequested(_ view: NewContactView) {
         viewModel.deleteContactFromDatabase()
-        delegate?.contactDeleted()
+        delegate?.contactDeleted(self)
     }
     
-    func createIsAvaliable() {
-        delegate?.creatingAvaliable()
+    func createIsAvaliable(_ view: NewContactView) {
+        delegate?.creatingAvaliable(self)
     }
     
-    func createIsNotAvaliable() {
-        delegate?.creatingIsNotAvaliable()
+    func createIsNotAvaliable(_ view: NewContactView) {
+        delegate?.creatingIsNotAvaliable(self)
     }
     
-    func didRequestImagePicker() {
-        delegate?.imagePickerView()
+    func imagePickerView(_ view: NewContactView) {
+        delegate?.imagePickerView(self)
     }
     
-    func imageHasUpdated() {
+    func imageHasUpdated(_ view: NewContactView) {
         viewModel.avatarHasUpdated()
     }
     

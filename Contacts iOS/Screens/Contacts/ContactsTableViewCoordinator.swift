@@ -79,7 +79,7 @@ extension ContactsTableViewCoordinator: ContactsTableViewControllerDelegate {
         goToAddScreen(newContactID)
     }
     
-    func viewWillAppear(sender viewController: ContactsTableViewController) {
+    func viewWillAppear(_ viewController: ContactsTableViewController) {
         setNavigationBarPreferences(viewController: viewController)
     }
     
@@ -87,7 +87,7 @@ extension ContactsTableViewCoordinator: ContactsTableViewControllerDelegate {
 
 extension ContactsTableViewCoordinator: ContactsTableViewModelDelegate {
     
-    func didRequestContactInfo(_ contactID: Int) {
+    func didRequestContactInfo(_ viewModel: ContactsTableViewModel, contactID: Int) {
         goToContactScreen(contactID: contactID)
     }
     

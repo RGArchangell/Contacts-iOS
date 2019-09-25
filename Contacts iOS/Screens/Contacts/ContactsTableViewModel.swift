@@ -11,7 +11,7 @@ import Realm
 import RealmSwift
 
 protocol ContactsTableViewModelDelegate: class {
-    func didRequestContactInfo(_ contactID: Int)
+    func didRequestContactInfo(_ viewModel: ContactsTableViewModel, contactID: Int)
 }
 
 class ContactsTableViewModel {
@@ -67,7 +67,7 @@ class ContactsTableViewModel {
     
     func requestContactInfo(contactID: Int?) {
         guard let id = contactID else { return }
-        delegate?.didRequestContactInfo(id)
+        delegate?.didRequestContactInfo(self, contactID: id)
     }
     
     func deleteContactFromDatabase(contactID: Int?) {

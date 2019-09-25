@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol ContactViewDelegate: class {
-    func phoneCallInitiated(_ phone: String)
+    func phoneCallInitiated(_ view: ContactView, _ phone: String)
 }
 
 class ContactView: UIView {
@@ -61,7 +61,7 @@ class ContactView: UIView {
 
     @IBAction private func phoneButtonTouched(_ sender: UIButton) {
         guard let phoneNumber = phoneButton.title(for: .normal) else { return }
-        delegate?.phoneCallInitiated(phoneNumber)
+        delegate?.phoneCallInitiated(self, phoneNumber)
     }
     
 }

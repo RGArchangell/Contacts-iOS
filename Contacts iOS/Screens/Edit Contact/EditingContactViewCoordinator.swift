@@ -87,11 +87,11 @@ class EditingContactViewCoordinator: Coordinator {
 
 extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
     
-    func contactSaved() {
+    func contactSaved(_ viewController: EditingContactViewController) {
         goBack()
     }
     
-    func imagePickerView() {
+    func imagePickerView(_ viewController: EditingContactViewController) {
         let imagePickerCoordinator = ImagePickerCoordinator(rootViewController: rootViewController)
         
         imagePickerCoordinator.delegate = self
@@ -99,15 +99,15 @@ extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
         imagePickerCoordinator.start()
     }
     
-    func contactDeleted() {
+    func contactDeleted(_ viewController: EditingContactViewController) {
         goBackAfterDeletion()
     }
     
-    func creatingAvaliable() {
+    func creatingAvaliable(_ viewController: EditingContactViewController) {
         updateCreateButtonEnabledState?(true)
     }
     
-    func creatingIsNotAvaliable() {
+    func creatingIsNotAvaliable(_ viewController: EditingContactViewController) {
         updateCreateButtonEnabledState?(false)
     }
     
@@ -119,7 +119,7 @@ extension EditingContactViewCoordinator: EditingContactViewControllerDelegate {
 
 extension EditingContactViewCoordinator: ImagePickerCoordinatorDelegate {
     
-    func imagePicked(image: UIImage) {
+    func imagePicked(_ coordinator: ImagePickerCoordinator, image: UIImage) {
         onSelectedImageUpdated?(image)
     }
     

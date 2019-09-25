@@ -18,11 +18,11 @@ private let ringtones = ["Default",
                          "Lose Yourself"]
 
 protocol NewContactViewDelegate: class {
-    func didRequestImagePicker()
-    func imageHasUpdated()
-    func createIsAvaliable()
-    func createIsNotAvaliable()
-    func deleteRequested()
+    func imagePickerView(_ view: NewContactView)
+    func imageHasUpdated(_ view: NewContactView)
+    func createIsAvaliable(_ view: NewContactView)
+    func createIsNotAvaliable(_ view: NewContactView)
+    func deleteRequested(_ view: NewContactView)
 }
 
 class NewContactView: UIView {
@@ -105,9 +105,9 @@ class NewContactView: UIView {
     
     func checkAvaliability() {
         if checkMainFields() {
-            delegate?.createIsAvaliable()
+            delegate?.createIsAvaliable(self)
         } else {
-            delegate?.createIsNotAvaliable()
+            delegate?.createIsNotAvaliable(self)
         }
     }
     
@@ -155,7 +155,7 @@ class NewContactView: UIView {
     func avatarImageHasUpdated(_ newImage: UIImage) {
         self.avatarButton.contentMode = .scaleToFill
         self.avatarButton.setImage(newImage, for: .normal)
-        delegate?.imageHasUpdated()
+        delegate?.imageHasUpdated(self)
     }
     
     @IBAction private func changeRingtoneInitiated(_ sender: UIButton) {
@@ -165,7 +165,7 @@ class NewContactView: UIView {
     
     @IBAction private func changeAvatarInitiated(_ sender: UIButton) {
         self.endEditing(true)
-        delegate?.didRequestImagePicker()
+        delegate?.imagePickerView(self)
     }
     
     @IBAction private func fieldsEditingChanged(_ sender: UITextField) {
@@ -173,7 +173,7 @@ class NewContactView: UIView {
     }
     
     @IBAction private func deleteButtonTapped(_ sender: UIButton) {
-        delegate?.deleteRequested()
+        delegate?.deleteRequested(self)
     }
     
 }
@@ -227,7 +227,7 @@ extension NewContactView: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
-        guard var userInfo = notification.userInfo else { return }
+        guard let userInfo = notification.userInfo else { return }
         guard let keyboard = userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue else { return }
         var keyboardFrame: CGRect = (keyboard).cgRectValue
         keyboardFrame = self.convert(keyboardFrame, from: nil)
